@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio OS — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Syne:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;--bg2:#0e0e0e;--bg3:#121212;--bg4:#161616;
+  --b:#1e1e1e;--b2:#282828;--b3:#343434;
+  --text:#d4d4d4;--t2:#888;--t3:#484848;--t4:#2a2a2a;--whi:#f0f0f0;
+  --mono:'JetBrains Mono',monospace;--sans:'Syne',sans-serif;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--mono);}
+body{padding:0;}
+
+/* Login */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.login{width:320px;border:1px solid var(--b2);border-radius:8px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.7);}
+.login-head{padding:18px 20px;background:var(--bg2);border-bottom:1px solid var(--b);}
+.login-h{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--whi);margin-bottom:4px;}
+.login-s{font-size:10px;color:var(--t3);}
+.login-body{padding:18px 20px;background:var(--bg2);}
+.lbl{font-size:9px;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;display:block;margin-bottom:6px;}
+.pw-in{
+  width:100%;padding:9px 12px;background:var(--bg);border:1px solid var(--b2);
+  border-radius:3px;font-family:var(--mono);font-size:12px;color:var(--text);
+  outline:none;margin-bottom:10px;transition:border-color .15s;
+}
+.pw-in:focus{border-color:var(--b3);}
+.pw-in::placeholder{color:var(--t4);}
+.pw-in.err{border-color:#555;animation:shake .3s ease;}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.login-btn{
+  width:100%;padding:9px 0;background:var(--whi);border:none;border-radius:3px;
+  font-family:var(--sans);font-size:12px;font-weight:600;color:var(--bg);
+  cursor:pointer;transition:opacity .15s;
+}
+.login-btn:hover{opacity:.88;}
+.login-err{font-size:10px;color:#888;margin-top:8px;text-align:center;display:none;}
+
+/* App shell */
+.shell{display:none;min-height:100vh;flex-direction:column;}
+.shell.on{display:flex;}
+
+/* Top bar */
+.topbar{
+  height:44px;background:var(--bg2);border-bottom:1px solid var(--b);
+  display:flex;align-items:center;padding:0 24px;gap:16px;flex-shrink:0;
+}
+.top-logo{font-family:var(--mono);font-size:12px;color:var(--t3);}
+.top-logo span{color:var(--t2);}
+.top-spacer{flex:1;}
+.top-stat{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--t3);}
+.top-dot{width:5px;height:5px;border-radius:50%;background:#686868;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.top-btn{
+  padding:5px 12px;border:1px solid var(--b2);border-radius:3px;
+  font-family:var(--mono);font-size:10px;color:var(--t3);background:none;
+  cursor:pointer;transition:color .15s;
+}
+.top-btn:hover{color:var(--text);}
+.top-btn.hi{background:var(--whi);color:var(--bg);border-color:var(--whi);}
+
+/* Main */
+.main{flex:1;padding:24px;max-width:1100px;margin:0 auto;width:100%;}
+
+/* Section */
+.sec-h{
+  display:flex;align-items:center;gap:14px;margin-bottom:18px;
+}
+.sec-title{font-family:var(--sans);font-size:13px;font-weight:500;color:var(--t2);letter-spacing:.04em;}
+.sec-rule{flex:1;height:1px;background:var(--b);}
+.sec-count{font-size:10px;color:var(--t4);}
+
+/* Stat cards */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px;}
+.stat-card{background:var(--bg2);border:1px solid var(--b);border-radius:5px;padding:14px 16px;}
+.stat-n{font-size:26px;font-weight:300;letter-spacing:-.03em;color:var(--text);margin-bottom:4px;font-variant-numeric:tabular-nums;}
+.stat-l{font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:.06em;}
+.stat-delta{font-size:9px;color:var(--t3);margin-top:4px;}
+
+/* Chart */
+.chart-wrap{background:var(--bg2);border:1px solid var(--b);border-radius:5px;padding:16px;margin-bottom:28px;}
+.chart-title{font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:14px;}
+.chart{height:80px;display:flex;align-items:flex-end;gap:3px;}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;}
+.bar-track{width:100%;background:var(--b);border-radius:2px 2px 0 0;position:relative;overflow:hidden;}
+.bar-fill{width:100%;background:var(--b3);border-radius:2px 2px 0 0;position:absolute;bottom:0;transition:height .4s ease;}
+.bar-lbl{font-size:8px;color:var(--t4);}
+
+/* Table */
+.tbl-wrap{background:var(--bg2);border:1px solid var(--b);border-radius:5px;overflow:hidden;margin-bottom:28px;}
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{
+  padding:9px 14px;font-size:9px;color:var(--t4);font-weight:400;
+  text-transform:uppercase;letter-spacing:.07em;
+  border-bottom:1px solid var(--b);text-align:left;background:var(--bg3);
+}
+.tbl td{padding:9px 14px;font-size:11px;color:var(--t3);border-bottom:1px solid var(--b);}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:var(--bg3);}
+.tbl td.hi{color:var(--text);}
+.tbl td.mono{font-family:var(--mono);font-size:10px;}
+.tag{font-size:8px;padding:1px 5px;border:1px solid var(--b2);border-radius:2px;color:var(--t3);}
+
+/* App opens table */
+.appbar{height:8px;background:var(--b2);border-radius:1px;margin-top:3px;overflow:hidden;}
+.appbar-fill{height:100%;background:var(--b3);border-radius:1px;}
+
+/* Empty */
+.empty{padding:32px;text-align:center;color:var(--t4);font-size:11px;}
+
+/* Loading */
+.loading{padding:32px;text-align:center;color:var(--t4);font-size:10px;}
+.spin{display:inline-block;animation:spin 1s linear infinite;margin-right:6px;}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+/* Refresh indicator */
+.refresh-hint{font-size:9px;color:var(--t4);margin-left:auto;}
+</style>
+</head>
+<body>
+
+<!-- Login screen -->
+<div class="login-wrap" id="login-wrap">
+  <div class="login">
+    <div class="login-head">
+      <div class="login-h">Admin — Portfolio OS</div>
+      <div class="login-s">luke-pekala / portfolio-os / admin</div>
+    </div>
+    <div class="login-body">
+      <label class="lbl">password</label>
+      <input class="pw-in" id="pw" type="password" placeholder="enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="login-btn" onclick="doLogin()">Sign in →</button>
+      <div class="login-err" id="login-err">Incorrect password</div>
+    </div>
+  </div>
+</div>
+
+<!-- Admin shell -->
+<div class="shell" id="shell">
+
+  <div class="topbar">
+    <span class="top-logo">luke-pekala / <span>admin</span></span>
+    <div class="top-spacer"></div>
+    <div class="top-stat"><div class="top-dot"></div><span id="last-sync">—</span></div>
+    <button class="top-btn" onclick="loadData()">↻ refresh</button>
+    <button class="top-btn hi" onclick="exportCSV()">↓ export CSV</button>
+    <button class="top-btn" onclick="doLogout()" style="margin-left:4px;">sign out</button>
+  </div>
+
+  <div class="main">
+
+    <!-- Stats row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-n" id="stat-total">—</div>
+        <div class="stat-l">Total signups</div>
+        <div class="stat-delta" id="stat-today-delta">— today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-n" id="stat-opens">—</div>
+        <div class="stat-l">App opens</div>
+        <div class="stat-delta" id="stat-opens-delta">— this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-n" id="stat-apps">—</div>
+        <div class="stat-l">Unique apps opened</div>
+        <div class="stat-delta">of <span id="stat-apps-total">—</span> total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-n" id="stat-top-app">—</div>
+        <div class="stat-l">Most popular app</div>
+        <div class="stat-delta" id="stat-top-count">— opens</div>
+      </div>
+    </div>
+
+    <!-- Signups chart -->
+    <div class="chart-wrap">
+      <div class="chart-title">Signups — last 14 days</div>
+      <div class="chart" id="signups-chart"></div>
+    </div>
+
+    <!-- App opens -->
+    <div class="sec-h">
+      <span class="sec-title">App opens</span>
+      <div class="sec-rule"></div>
+      <span class="sec-count" id="opens-count">—</span>
+    </div>
+    <div class="tbl-wrap" id="opens-tbl">
+      <div class="loading"><span class="spin">↻</span>loading...</div>
+    </div>
+
+    <!-- Email signups -->
+    <div class="sec-h">
+      <span class="sec-title">Email signups</span>
+      <div class="sec-rule"></div>
+      <span class="sec-count" id="emails-count">—</span>
+      <span class="refresh-hint">from Google Sheets</span>
+    </div>
+    <div class="tbl-wrap" id="emails-tbl">
+      <div class="loading"><span class="spin">↻</span>loading...</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let adminPw='';
+let rawData={emails:[],opens:[]};
+
+// ── Login ──────────────────────────────
+function doLogin(){
+  const pw=document.getElementById('pw').value;
+  if(!pw){ shake(); return; }
+  adminPw=pw;
+  // Verify password by trying to load data
+  loadData(true);
+}
+function shake(){
+  const el=document.getElementById('pw');
+  el.classList.add('err');
+  setTimeout(()=>el.classList.remove('err'),400);
+}
+function doLogout(){
+  adminPw='';
+  document.getElementById('shell').classList.remove('on');
+  document.getElementById('login-wrap').style.display='flex';
+  document.getElementById('pw').value='';
+}
+
+// ── Load data from backend ─────────────
+async function loadData(isLogin=false){
+  if(!adminPw) return;
+  try{
+    const res=await fetch('/api/admin-data',{
+      headers:{'x-admin-password':adminPw}
+    });
+    if(res.status===401){
+      if(isLogin){
+        document.getElementById('login-err').style.display='block';
+        shake();
+      }
+      return;
+    }
+    const data=await res.json();
+    rawData=data;
+    if(isLogin){
+      document.getElementById('login-wrap').style.display='none';
+      document.getElementById('shell').classList.add('on');
+    }
+    renderDashboard(data);
+    document.getElementById('last-sync').textContent='synced '+new Date().toLocaleTimeString();
+  }catch(e){
+    // If backend not available, show demo data
+    if(isLogin){
+      document.getElementById('login-wrap').style.display='none';
+      document.getElementById('shell').classList.add('on');
+    }
+    renderDashboard(getDemoData());
+    document.getElementById('last-sync').textContent='demo mode (backend not connected)';
+  }
+}
+
+function getDemoData(){
+  const now=new Date();
+  const emails=Array.from({length:12},(_,i)=>({
+    email:`user${i+1}@example.com`,
+    app: ['styleguard','glossary-kit','annotately','doc-search','mark-flow'][i%5],
+    appName: ['StyleGuard','Glossary Kit','Annotately','DocSearch Pro','MarkFlow'][i%5],
+    ts: new Date(now-i*86400000*0.7).toISOString(),
+    type:'unlock'
+  }));
+  const opens=Array.from({length:38},(_,i)=>({
+    appId:['styleguard','glossary-kit','mark-flow','annotately','diff-doc'][i%5],
+    appName:['StyleGuard','Glossary Kit','MarkFlow','Annotately','DiffDoc'][i%5],
+    ts: new Date(now-i*3600000*2).toISOString(),
+    email:`user${(i%12)+1}@example.com`
+  }));
+  return {emails,opens};
+}
+
+// ── Render ─────────────────────────────
+function renderDashboard(data){
+  const {emails,opens}=data;
+
+  // Stats
+  const today=new Date().toDateString();
+  const todayCount=emails.filter(e=>new Date(e.ts).toDateString()===today).length;
+  const weekAgo=new Date(Date.now()-7*86400000);
+  const weekOpens=opens.filter(o=>new Date(o.ts)>weekAgo).length;
+
+  const appCounts={};
+  opens.forEach(o=>{ appCounts[o.appName]=(appCounts[o.appName]||0)+1; });
+  const topApp=Object.entries(appCounts).sort((a,b)=>b[1]-a[1])[0];
+
+  document.getElementById('stat-total').textContent=emails.length;
+  document.getElementById('stat-today-delta').textContent=`${todayCount} today`;
+  document.getElementById('stat-opens').textContent=opens.length;
+  document.getElementById('stat-opens-delta').textContent=`${weekOpens} this week`;
+  document.getElementById('stat-apps').textContent=Object.keys(appCounts).length;
+  document.getElementById('stat-apps-total').textContent='15';
+  document.getElementById('stat-top-app').textContent=topApp?topApp[0].split(' ')[0]:'—';
+  document.getElementById('stat-top-count').textContent=topApp?topApp[1]+' opens':'';
+
+  // Chart — last 14 days
+  const days=Array.from({length:14},(_,i)=>{
+    const d=new Date(Date.now()-(13-i)*86400000);
+    return {date:d, label:d.toLocaleDateString('en',{month:'short',day:'numeric'}), count:0};
+  });
+  emails.forEach(e=>{
+    const d=new Date(e.ts).toDateString();
+    const day=days.find(x=>x.date.toDateString()===d);
+    if(day) day.count++;
+  });
+  const maxC=Math.max(...days.map(d=>d.count),1);
+  const trackH=60;
+  document.getElementById('signups-chart').innerHTML=days.map(d=>`
+    <div class="bar-col">
+      <div class="bar-track" style="height:${trackH}px;">
+        <div class="bar-fill" style="height:${Math.max(d.count/maxC*trackH,d.count>0?3:0)}px"></div>
+      </div>
+      <div class="bar-lbl">${d.label.split(' ')[1]}</div>
+    </div>`).join('');
+
+  // Opens table
+  const sortedApps=Object.entries(appCounts).sort((a,b)=>b[1]-a[1]);
+  const maxO=sortedApps[0]?.[1]||1;
+  document.getElementById('opens-count').textContent=opens.length+' total';
+  document.getElementById('opens-tbl').innerHTML=sortedApps.length?`
+    <table class="tbl">
+      <thead><tr>
+        <th>App</th><th>Opens</th><th>Breakdown</th><th>% of total</th>
+      </tr></thead>
+      <tbody>${sortedApps.map(([name,count])=>`
+        <tr>
+          <td class="hi">${name}</td>
+          <td class="mono">${count}</td>
+          <td style="min-width:120px">
+            <div class="appbar"><div class="appbar-fill" style="width:${Math.round(count/maxO*100)}%"></div></div>
+          </td>
+          <td class="mono">${Math.round(count/opens.length*100)}%</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`:
+    `<div class="empty">No app opens recorded yet</div>`;
+
+  // Emails table
+  document.getElementById('emails-count').textContent=emails.length+' total';
+  document.getElementById('emails-tbl').innerHTML=emails.length?`
+    <table class="tbl">
+      <thead><tr>
+        <th>Email</th><th>Triggered by</th><th>Type</th><th>Date</th>
+      </tr></thead>
+      <tbody>${[...emails].sort((a,b)=>new Date(b.ts)-new Date(a.ts)).map(e=>`
+        <tr>
+          <td class="hi mono">${e.email}</td>
+          <td><span class="tag">${e.appName||e.app||'—'}</span></td>
+          <td class="mono">${e.type||'unlock'}</td>
+          <td class="mono">${new Date(e.ts).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`:
+    `<div class="empty">No signups yet — share the portfolio link to start collecting emails</div>`;
+}
+
+// ── CSV Export ─────────────────────────
+function exportCSV(){
+  const {emails}=rawData;
+  if(!emails.length){ alert('No data to export'); return; }
+  const rows=[['Email','App','Type','Date/Time'],...emails.map(e=>[e.email,e.appName||e.app,e.type||'unlock',e.ts])];
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download=`portfolio-emails-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+// Auto-refresh every 5 minutes when logged in
+setInterval(()=>{ if(document.getElementById('shell').classList.contains('on')) loadData(); },300000);
+</script>
+</body>
+</html>

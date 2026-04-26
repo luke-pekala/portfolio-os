@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luke Pekala — Portfolio OS</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:   #080808; --bg2:  #0e0e0e; --bg3:  #121212;
+  --bg4:  #161616; --bg5:  #1c1c1c;
+  --b:    #1e1e1e; --b2:   #282828; --b3:   #343434;
+  --text: #d4d4d4; --t2:   #888;    --t3:   #484848;
+  --t4:   #2a2a2a; --whi:  #f0f0f0;
+  --mono: 'JetBrains Mono',monospace;
+  --sans: 'Syne',sans-serif;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);}
+body{font-family:var(--mono);display:flex;align-items:center;justify-content:center;padding:16px;}
+
+/* Window */
+.win{
+  width:100%;max-width:1120px;
+  height:calc(100vh - 32px);max-height:740px;
+  border-radius:10px;overflow:hidden;
+  display:flex;flex-direction:column;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.07),0 40px 100px rgba(0,0,0,0.9);
+  position:relative;
+}
+
+/* Title bar */
+.tbar{
+  height:40px;min-height:40px;flex-shrink:0;
+  background:var(--bg2);border-bottom:1px solid var(--b);
+  display:flex;align-items:center;padding:0 14px;
+  user-select:none;position:relative;gap:0;
+}
+.tl{display:flex;gap:6px;margin-right:14px;}
+.tld{width:12px;height:12px;border-radius:50%;}
+.tld:nth-child(1){background:#ff5f57;}
+.tld:nth-child(2){background:#febc2e;}
+.tld:nth-child(3){background:#28c840;}
+.tabs{display:flex;flex:1;overflow:hidden;min-width:0;}
+.tab{
+  display:flex;align-items:center;gap:6px;padding:0 14px;height:40px;
+  font-size:11px;color:var(--t3);border-right:1px solid var(--b);
+  cursor:pointer;flex-shrink:0;white-space:nowrap;
+  transition:color .15s;border-bottom:2px solid transparent;margin-bottom:-1px;
+}
+.tab:hover{color:var(--t2);}
+.tab.on{color:var(--text);background:var(--bg3);border-bottom-color:#707070;}
+.tdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.tx{
+  width:14px;height:14px;border-radius:3px;margin-left:2px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:var(--t4);transition:color .1s;
+}
+.tab.on .tx,.tab:hover .tx{color:var(--t3);}
+.tx:hover{color:var(--text)!important;}
+.tbar-mid{position:absolute;left:50%;transform:translateX(-50%);font-size:11px;color:var(--t4);pointer-events:none;}
+.tbar-r{margin-left:auto;display:flex;gap:5px;flex-shrink:0;}
+.tbtn{
+  height:26px;padding:0 10px;border-radius:3px;
+  background:var(--bg3);border:1px solid var(--b);
+  font-family:var(--mono);font-size:10px;color:var(--t3);
+  cursor:pointer;display:flex;align-items:center;gap:4px;
+  transition:color .15s;white-space:nowrap;
+}
+.tbtn:hover{color:var(--t2);}
+.tbtn.hi{color:var(--t2);}
+
+/* Layout */
+.layout{display:flex;flex:1;overflow:hidden;}
+
+/* Activity bar */
+.actbar{
+  width:44px;min-width:44px;background:var(--bg2);
+  border-right:1px solid var(--b);
+  display:flex;flex-direction:column;align-items:center;
+  padding:6px 0;gap:2px;flex-shrink:0;
+}
+.ai{
+  width:32px;height:32px;border-radius:5px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--t3);cursor:pointer;transition:color .15s;
+  position:relative;
+}
+.ai:hover{color:var(--t2);}
+.ai.on{color:var(--t2);background:var(--bg4);}
+.ai-sp{flex:1;}
+.abadge{
+  position:absolute;top:4px;right:4px;
+  width:6px;height:6px;border-radius:50%;
+  background:#686868;border:1.5px solid var(--bg2);
+}
+
+/* Sidebar */
+.sidebar{
+  width:196px;min-width:196px;background:var(--bg2);
+  border-right:1px solid var(--b);
+  display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;
+}
+.sbh{
+  padding:9px 12px 6px;font-size:9px;font-weight:600;
+  color:var(--t4);letter-spacing:.1em;text-transform:uppercase;
+  border-bottom:1px solid var(--b);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sbh-r{cursor:pointer;color:var(--t3);font-size:11px;transition:color .15s;}
+.sbh-r:hover{color:var(--t2);}
+.tree{flex:1;overflow-y:auto;padding:4px 0;}
+.tree::-webkit-scrollbar{width:2px;}
+.tree::-webkit-scrollbar-thumb{background:var(--b2);}
+.tsec{
+  padding:7px 12px 3px;font-size:9px;color:var(--t4);
+  letter-spacing:.08em;text-transform:uppercase;
+  display:flex;align-items:center;gap:7px;
+}
+.tsec::after{content:'';flex:1;height:1px;background:var(--b);}
+.ti{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 12px 5px 14px;font-size:11px;color:var(--t3);
+  cursor:pointer;border-left:2px solid transparent;
+  transition:background .1s,color .1s;
+}
+.ti:hover{background:var(--bg3);color:var(--t2);}
+.ti.on{background:var(--bg4);color:var(--text);border-left-color:#707070;}
+.tidot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.tiname{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--sans);font-size:12px;font-weight:400;}
+.tipill{font-size:8px;padding:1px 4px;border-radius:2px;flex-shrink:0;}
+.p-live{background:rgba(160,160,160,.09);color:#777;}
+.p-soon{background:rgba(120,120,120,.07);color:#555;}
+.p-email{background:rgba(150,150,150,.08);color:#666;}
+.p-code{background:rgba(100,100,100,.07);color:#505050;}
+
+/* Editor */
+.editor{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.bc{
+  height:27px;min-height:27px;background:var(--bg3);
+  border-bottom:1px solid var(--b);
+  display:flex;align-items:center;padding:0 14px;
+  gap:5px;font-size:10px;color:var(--t4);flex-shrink:0;
+}
+.bc-cur{color:var(--t3);}
+
+/* Split */
+.split{flex:1;display:flex;overflow:hidden;}
+
+/* Left pane */
+.lpane{
+  width:310px;min-width:260px;flex-shrink:0;
+  border-right:1px solid var(--b);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.ph{
+  height:29px;background:var(--bg2);border-bottom:1px solid var(--b);
+  display:flex;align-items:center;padding:0 10px;
+  gap:7px;font-size:9px;color:var(--t3);flex-shrink:0;
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.ph-title{flex:1;}
+.phbtn{
+  font-size:9px;padding:2px 6px;border:1px solid var(--b2);
+  border-radius:2px;cursor:pointer;color:var(--t3);
+  background:none;font-family:var(--mono);transition:color .15s;
+}
+.phbtn:hover{color:var(--text);}
+.fbar{
+  padding:8px 9px;border-bottom:1px solid var(--b);
+  display:flex;gap:6px;flex-shrink:0;align-items:center;
+}
+.srch{position:relative;flex:1;}
+.si-ic{position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--t4);pointer-events:none;}
+.si-in{
+  width:100%;padding:5px 8px 5px 22px;
+  background:var(--bg);border:1px solid var(--b);border-radius:3px;
+  font-family:var(--mono);font-size:10px;color:var(--text);outline:none;
+  transition:border-color .15s;
+}
+.si-in::placeholder{color:var(--t4);}
+.si-in:focus{border-color:var(--b2);}
+.fps{display:flex;gap:3px;}
+.fp{
+  padding:3px 7px;border:1px solid var(--b);border-radius:2px;
+  font-family:var(--mono);font-size:9px;color:var(--t4);
+  background:none;cursor:pointer;transition:color .15s,border-color .15s;
+}
+.fp:hover{color:var(--t2);}
+.fp.on{color:var(--t2);border-color:var(--b3);}
+.alist{flex:1;overflow-y:auto;padding:4px;}
+.alist::-webkit-scrollbar{width:2px;}
+.alist::-webkit-scrollbar-thumb{background:var(--b2);}
+
+/* App card */
+.ac{
+  border:1px solid var(--b);border-radius:4px;padding:10px 11px;
+  background:var(--bg);cursor:pointer;margin-bottom:4px;
+  transition:border-color .15s,background .15s;
+  display:flex;flex-direction:column;gap:6px;
+}
+.ac:hover{border-color:var(--b2);background:var(--bg3);}
+.ac.sel{border-color:var(--b3);background:rgba(255,255,255,.018);}
+.ac-top{display:flex;align-items:flex-start;gap:7px;}
+.ac-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.ac-info{flex:1;min-width:0;}
+.ac-name{font-family:var(--sans);font-size:13px;font-weight:500;color:var(--text);margin-bottom:1px;letter-spacing:-.01em;}
+.ac-slug{font-size:9px;color:var(--t4);margin-bottom:3px;}
+.ac-desc{font-size:10px;color:var(--t3);line-height:1.55;}
+.ac-foot{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+.atag{font-size:9px;color:var(--t4);padding:1px 4px;border:1px solid var(--b);border-radius:2px;}
+.ac-stars{font-size:9px;color:var(--t4);margin-left:auto;}
+.ac-run{
+  font-size:9px;padding:3px 8px;border:1px solid var(--b2);border-radius:2px;
+  color:var(--t2);background:none;font-family:var(--mono);cursor:pointer;
+  white-space:nowrap;flex-shrink:0;transition:color .15s,border-color .15s;
+}
+.ac-run:hover{color:var(--text);border-color:var(--b3);}
+.ac-run.dim{color:var(--t4);border-color:var(--b);cursor:default;}
+
+/* Right pane */
+.rpane{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg3);}
+.viewer{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+
+/* Welcome state */
+.welcome{text-align:center;max-width:280px;}
+.welcome svg{opacity:.12;margin-bottom:14px;}
+.welcome h3{font-family:var(--sans);font-size:13px;font-weight:400;color:var(--t2);margin-bottom:6px;}
+.welcome p{font-size:10px;color:var(--t4);line-height:1.7;}
+.wh{margin-top:14px;padding:7px 12px;border:1px dashed var(--b2);border-radius:3px;font-size:9px;color:var(--t4);line-height:1.6;}
+
+/* Iframe embed */
+.embed{width:100%;height:100%;display:flex;flex-direction:column;}
+.ebar{
+  height:30px;background:var(--bg2);border-bottom:1px solid var(--b);
+  display:flex;align-items:center;padding:0 10px;gap:7px;flex-shrink:0;
+}
+.edots{display:flex;gap:4px;}
+.edot{width:7px;height:7px;border-radius:50%;}
+.eurl{
+  flex:1;padding:3px 7px;background:var(--bg);
+  border:1px solid var(--b);border-radius:2px;
+  font-size:9px;color:var(--t3);font-family:var(--mono);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.elive{display:flex;align-items:center;gap:4px;font-size:9px;color:#777;}
+.elivdot{width:5px;height:5px;border-radius:50%;background:#777;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.eframe{flex:1;border:none;background:var(--bg4);}
+
+/* Deploy pending */
+.deploy-pend{width:100%;max-width:420px;}
+.dp-head{
+  padding:8px 12px;background:var(--bg2);border:1px solid var(--b);
+  border-radius:4px 4px 0 0;
+  display:flex;align-items:center;gap:7px;font-size:10px;color:var(--t3);
+}
+.dp-body{
+  padding:16px 18px;background:var(--bg);border:1px solid var(--b);
+  border-top:none;border-radius:0 0 4px 4px;
+}
+.dp-title{font-family:var(--sans);font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px;letter-spacing:-.01em;}
+.dp-desc{font-size:11px;color:var(--t3);line-height:1.65;margin-bottom:14px;}
+.dp-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px;}
+.dp-tag{font-size:9px;color:var(--t4);padding:2px 6px;border:1px solid var(--b);border-radius:2px;}
+.dp-status{
+  display:flex;align-items:center;gap:6px;padding:8px 10px;
+  background:var(--bg2);border:1px solid var(--b);border-radius:3px;
+  font-size:10px;color:var(--t3);margin-bottom:10px;
+}
+.dp-status-dot{width:6px;height:6px;border-radius:50%;background:var(--b3);flex-shrink:0;}
+.dp-links{display:flex;gap:6px;}
+.dp-link{
+  padding:6px 12px;border:1px solid var(--b2);border-radius:3px;
+  font-family:var(--mono);font-size:10px;color:var(--t2);
+  text-decoration:none;background:none;cursor:pointer;
+  transition:color .15s,border-color .15s;
+}
+.dp-link:hover{color:var(--text);border-color:var(--b3);}
+.dp-link.pri{background:var(--bg4);}
+
+/* Code preview */
+.code-prev{width:100%;max-width:480px;border:1px solid var(--b);border-radius:4px;overflow:hidden;}
+.cp-head{
+  padding:7px 12px;background:var(--bg2);border-bottom:1px solid var(--b);
+  display:flex;align-items:center;gap:7px;font-size:10px;color:var(--t3);
+}
+.cp-body{padding:14px 16px;max-height:340px;overflow-y:auto;}
+.cp-body::-webkit-scrollbar{width:2px;}
+.cp-body::-webkit-scrollbar-thumb{background:var(--b2);}
+.cp-line{display:flex;gap:10px;margin-bottom:6px;font-size:10px;line-height:1.4;}
+.ln{color:var(--t4);width:16px;text-align:right;flex-shrink:0;}
+.lc{color:var(--t3);font-family:var(--mono);}
+.lc .kw{color:#aaa;}.lc .fn{color:#888;}.lc .cm{color:var(--t4);}.lc .st{color:#999;}.lc .num{color:#777;}
+.cp-link{
+  display:inline-flex;align-items:center;gap:5px;
+  margin-top:10px;padding:5px 10px;
+  border:1px solid var(--b2);border-radius:3px;
+  font-size:9px;color:var(--t2);text-decoration:none;
+  transition:color .15s;
+}
+.cp-link:hover{color:var(--text);}
+
+/* Coming soon */
+.cs{width:100%;max-width:420px;border:1px solid var(--b);border-radius:4px;overflow:hidden;}
+.csh{padding:7px 12px;background:var(--bg2);border-bottom:1px solid var(--b);display:flex;align-items:center;gap:7px;font-size:10px;color:var(--t3);}
+.csb{padding:14px 16px;}
+.cursor{display:inline-block;width:2px;height:11px;background:#686868;animation:blink 1s infinite;border-radius:1px;vertical-align:middle;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.csprog{margin-top:12px;padding-top:12px;border-top:1px solid var(--b);}
+.csprog-l{font-size:9px;color:var(--t4);display:flex;justify-content:space-between;margin-bottom:5px;}
+.csprog-t{height:2px;background:var(--b);border-radius:1px;}
+.csprog-f{height:100%;border-radius:1px;background:#585858;}
+.cs-notify{margin-top:10px;display:flex;gap:5px;}
+.cs-email{flex:1;padding:5px 9px;background:var(--bg);border:1px solid var(--b);border-radius:2px;font-family:var(--mono);font-size:10px;color:var(--text);outline:none;}
+.cs-email::placeholder{color:var(--t4);}
+.cs-email:focus{border-color:var(--b2);}
+.cs-nbtn{padding:5px 11px;background:var(--bg4);border:1px solid var(--b2);border-radius:2px;font-family:var(--mono);font-size:10px;color:var(--t2);cursor:pointer;white-space:nowrap;transition:color .15s;}
+.cs-nbtn:hover{color:var(--text);}
+
+/* Minimap */
+.mmap{width:46px;background:var(--bg2);border-left:1px solid var(--b);padding:12px 4px;display:flex;flex-direction:column;gap:2px;flex-shrink:0;}
+.mm{height:3px;border-radius:1px;background:var(--b);}
+.mmhl{height:20px;background:rgba(255,255,255,.025);border-radius:2px;margin:4px -4px;}
+
+/* Status bar */
+.sbar{
+  height:23px;min-height:23px;flex-shrink:0;
+  background:var(--bg2);border-top:1px solid var(--b);
+  display:flex;align-items:center;padding:0 8px;
+  font-size:10px;color:var(--t4);
+}
+.sb{padding:0 6px;height:23px;display:flex;align-items:center;gap:4px;border-right:1px solid var(--b);white-space:nowrap;}
+.sb.hi{color:var(--t3);}
+.sb.whi{color:var(--t2);}
+.sbr{margin-left:auto;display:flex;}
+.sdot{width:5px;height:5px;border-radius:50%;background:#686868;animation:pulse 2s infinite;}
+
+/* ── GATE MODAL ─────────────────────────── */
+.gate-ov{
+  position:absolute;inset:0;background:rgba(8,8,8,.93);
+  backdrop-filter:blur(10px);
+  display:none;align-items:center;justify-content:center;z-index:50;
+}
+.gate-ov.show{display:flex;animation:fi .2s ease;}
+@keyframes fi{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+.gate{
+  width:360px;border:1px solid var(--b2);border-radius:8px;
+  overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.8);
+}
+.gate-top{padding:20px 22px 16px;background:var(--bg2);border-bottom:1px solid var(--b);}
+.gate-ico{
+  width:42px;height:42px;border-radius:9px;
+  background:var(--bg3);border:1px solid var(--b2);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:12px;font-size:17px;
+}
+.gate-h{font-family:var(--sans);font-size:16px;font-weight:600;color:var(--whi);letter-spacing:-.02em;margin-bottom:5px;}
+.gate-s{font-size:11px;color:var(--t2);line-height:1.65;}
+.gate-body{padding:18px 22px;background:var(--bg2);}
+.gate-lbl{font-size:9px;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;display:block;}
+.gate-in{
+  width:100%;padding:9px 12px;background:var(--bg);
+  border:1px solid var(--b2);border-radius:3px;
+  font-family:var(--mono);font-size:12px;color:var(--text);outline:none;
+  transition:border-color .15s;margin-bottom:10px;
+}
+.gate-in:focus{border-color:var(--b3);}
+.gate-in::placeholder{color:var(--t4);}
+.gate-in.err{border-color:#555;animation:shake .3s ease;}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.gate-btn{
+  width:100%;padding:9px 0;background:var(--whi);border:none;border-radius:3px;
+  font-family:var(--sans);font-size:12px;font-weight:600;color:var(--bg);
+  cursor:pointer;transition:opacity .15s;margin-bottom:14px;
+}
+.gate-btn:hover{opacity:.88;}
+.gate-btn:disabled{opacity:.4;cursor:not-allowed;}
+.gate-perks{border-top:1px solid var(--b);padding-top:12px;display:flex;flex-direction:column;gap:6px;}
+.gate-perk{display:flex;align-items:flex-start;gap:7px;font-size:10px;color:var(--t3);}
+.gate-perk::before{content:'—';font-family:var(--mono);font-size:9px;color:var(--t4);flex-shrink:0;margin-top:1px;}
+.gate-note{margin-top:10px;text-align:center;font-size:9px;color:var(--t4);}
+
+/* ── SUCCESS ────────────────────────────── */
+.success-ov{
+  position:absolute;inset:0;background:rgba(8,8,8,.96);
+  display:none;align-items:center;justify-content:center;z-index:51;
+}
+.success-ov.show{display:flex;animation:fi .25s ease;}
+.success-box{text-align:center;max-width:280px;}
+.success-check{
+  width:46px;height:46px;border-radius:50%;
+  background:var(--bg3);border:1px solid var(--b2);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;font-size:18px;
+}
+.success-h{font-family:var(--sans);font-size:18px;font-weight:600;color:var(--whi);letter-spacing:-.02em;margin-bottom:7px;}
+.success-s{font-size:11px;color:var(--t2);line-height:1.7;margin-bottom:18px;}
+.success-btn{
+  padding:8px 22px;background:var(--whi);border:none;border-radius:3px;
+  font-family:var(--sans);font-size:12px;font-weight:600;color:var(--bg);
+  cursor:pointer;transition:opacity .15s;
+}
+.success-btn:hover{opacity:.9;}
+.success-apps{margin-top:12px;display:flex;gap:5px;justify-content:center;flex-wrap:wrap;}
+.sapp{font-size:9px;padding:2px 7px;border:1px solid var(--b2);border-radius:2px;color:var(--t3);font-family:var(--mono);}
+
+/* ── ORIENT ─────────────────────────────── */
+.orient{
+  position:absolute;inset:0;z-index:60;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .3s ease;
+}
+.orient-inner{max-width:420px;text-align:center;padding:20px;}
+.orient-mono{
+  font-family:var(--mono);font-size:10px;color:var(--t4);
+  letter-spacing:.08em;margin-bottom:18px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.orient-mono::before,.orient-mono::after{content:'';display:inline-block;width:22px;height:1px;background:var(--t4);}
+.orient-h{
+  font-family:var(--sans);font-size:clamp(22px,3vw,30px);font-weight:300;
+  letter-spacing:-.03em;color:var(--text);line-height:1.15;margin-bottom:10px;
+}
+.orient-h strong{font-weight:600;}
+.orient-sub{font-size:12px;color:var(--t2);line-height:1.8;margin-bottom:24px;}
+.orient-btn{
+  padding:9px 26px;background:var(--whi);border:none;border-radius:3px;
+  font-family:var(--sans);font-size:12px;font-weight:600;color:var(--bg);
+  cursor:pointer;transition:opacity .15s;
+}
+.orient-btn:hover{opacity:.9;}
+.orient-skip{margin-top:10px;font-size:10px;color:var(--t4);cursor:pointer;font-family:var(--mono);transition:color .15s;}
+.orient-skip:hover{color:var(--t3);}
+
+/* ── CMD PALETTE ─────────────────────────── */
+.cmd-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:100;align-items:flex-start;justify-content:center;padding-top:90px;}
+.cmd-ov.show{display:flex;}
+.cmd-box{width:460px;background:var(--bg3);border:1px solid var(--b2);border-radius:7px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.7);}
+.cmd-iw{display:flex;align-items:center;gap:7px;padding:10px 13px;border-bottom:1px solid var(--b);}
+.cmd-in{flex:1;background:none;border:none;font-family:var(--mono);font-size:13px;color:var(--text);outline:none;}
+.cmd-in::placeholder{color:var(--t4);}
+.cmd-res{max-height:240px;overflow-y:auto;}
+.cmd-row{padding:8px 13px;font-size:11px;color:var(--t2);cursor:pointer;display:flex;align-items:center;gap:8px;}
+.cmd-row:hover{background:var(--bg4);}
+.cmd-ico{font-size:9px;color:var(--t4);}
+.cmd-foot{padding:7px 13px;border-top:1px solid var(--b);display:flex;gap:14px;}
+.cmd-hint{font-size:9px;color:var(--t4);}
+
+/* Toast */
+#toast{
+  position:fixed;bottom:24px;right:24px;
+  padding:8px 14px;background:var(--bg3);border:1px solid var(--b2);
+  border-radius:3px;font-family:var(--mono);font-size:10px;color:var(--t2);
+  z-index:999;transform:translateY(10px);opacity:0;
+  transition:all .2s;pointer-events:none;
+}
+#toast.show{transform:translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+
+<div class="win" id="win">
+
+  <!-- Orientation -->
+  <div class="orient" id="orient">
+    <div class="orient-inner">
+      <div class="orient-mono">luke-pekala / portfolio-os</div>
+      <h1 class="orient-h">Documentation &amp; AI tools,<br><strong>running live.</strong></h1>
+      <p class="orient-sub">A collection of browser-based tools for developers and technical teams — doc linting, search, annotation, diff, markdown, and more. Enter your email once to run everything free.</p>
+      <button class="orient-btn" onclick="closeOrient()">Browse the apps →</button>
+      <div class="orient-skip" onclick="closeOrient()">skip intro</div>
+    </div>
+  </div>
+
+  <!-- Title bar -->
+  <div class="tbar">
+    <div class="tl"><div class="tld"></div><div class="tld"></div><div class="tld"></div></div>
+    <div class="tabs" id="tabs"></div>
+    <div class="tbar-mid">luke-pekala / portfolio-os</div>
+    <div class="tbar-r">
+      <div class="tbtn" onclick="toggleCmd()">⌘K</div>
+      <div class="tbtn hi" id="access-btn" onclick="openGateGlobal()">
+        <span id="access-label">✉ get access</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layout -->
+  <div class="layout">
+
+    <!-- Activity bar -->
+    <div class="actbar">
+      <div class="ai on" title="Explorer">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 2h7l3 3v9H3V2z"/><path d="M10 2v3h3"/></svg>
+      </div>
+      <div class="ai" title="Search">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6.5" cy="6.5" r="4"/><line x1="9.5" y1="9.5" x2="14" y2="14"/></svg>
+      </div>
+      <div class="ai" title="Git" style="position:relative;">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="4" cy="4" r="1.5"/><circle cx="4" cy="12" r="1.5"/><circle cx="12" cy="4" r="1.5"/><path d="M4 5.5v5M5.5 4h5"/></svg>
+        <div class="abadge"></div>
+      </div>
+      <div class="ai-sp"></div>
+      <div class="ai" title="Account">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="5" r="2.5"/><path d="M2.5 14c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>
+      </div>
+      <div class="ai" title="Settings">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sbh">
+        <span>Explorer</span>
+        <span class="sbh-r" onclick="renderTree()">↻</span>
+      </div>
+      <div class="tree" id="tree"></div>
+    </div>
+
+    <!-- Editor -->
+    <div class="editor">
+      <div class="bc">
+        <span>portfolio-os</span>
+        <span style="color:var(--t4)">›</span>
+        <span id="bc-sec">apps</span>
+        <span style="color:var(--t4)">›</span>
+        <span class="bc-cur" id="bc-file">—</span>
+      </div>
+      <div class="split">
+
+        <!-- Left list pane -->
+        <div class="lpane">
+          <div class="ph">
+            <span class="ph-title">applications</span>
+            <button class="phbtn" id="sort-btn" onclick="cycleSort()">↕ stars</button>
+          </div>
+          <div class="fbar">
+            <div class="srch">
+              <span class="si-ic">/</span>
+              <input class="si-in" id="search" placeholder="search apps..." oninput="renderList()">
+            </div>
+            <div class="fps">
+              <button class="fp on" onclick="setFilter('all',this)">all</button>
+              <button class="fp" onclick="setFilter('live',this)">live</button>
+              <button class="fp" onclick="setFilter('soon',this)">soon</button>
+            </div>
+          </div>
+          <div class="alist" id="alist"></div>
+        </div>
+
+        <!-- Right viewer pane -->
+        <div class="rpane">
+          <div class="ph">
+            <span class="ph-title" id="vt">preview</span>
+            <button class="phbtn" id="ext-btn" style="display:none" onclick="openExternal()">↗ open</button>
+          </div>
+          <div class="viewer" id="viewer">
+            <div class="welcome">
+              <svg width="38" height="38" viewBox="0 0 40 40" fill="none"><rect x="3" y="3" width="34" height="34" rx="5" stroke="#888" stroke-width="1"/><path d="M11 15h7M11 20h10M11 25h5" stroke="#888" stroke-width="1" stroke-linecap="round"/><circle cx="29" cy="20" r="5" stroke="#888" stroke-width="1" opacity=".5"/></svg>
+              <h3>select an app to preview</h3>
+              <p>click any app on the left to open it in split view</p>
+              <div class="wh">styleguard runs live · all others link to github<br>deploy pending apps unlock with your email</div>
+            </div>
+          </div>
+
+          <!-- Gate modal (inside win for blur context) -->
+          <div class="gate-ov" id="gate-ov" onclick="gateOutside(event)">
+            <div class="gate" onclick="event.stopPropagation()">
+              <div class="gate-top">
+                <div class="gate-ico" id="gate-ico">🔓</div>
+                <div class="gate-h" id="gate-h">Run all apps free</div>
+                <div class="gate-s" id="gate-s">Enter your email to unlock every app — no payment, no account. One email, permanent access.</div>
+              </div>
+              <div class="gate-body">
+                <label class="gate-lbl">your email</label>
+                <input class="gate-in" id="gate-email" type="email" placeholder="you@company.com" onkeydown="if(event.key==='Enter')submitGate()">
+                <button class="gate-btn" id="gate-btn" onclick="submitGate()">Unlock all apps →</button>
+                <div class="gate-perks">
+                  <div class="gate-perk">Run browser apps live inside this window</div>
+                  <div class="gate-perk">Direct GitHub links for all source code</div>
+                  <div class="gate-perk">Early access when new tools ship</div>
+                  <div class="gate-perk">No spam — one email per new release</div>
+                </div>
+                <div class="gate-note">No credit card. Unsubscribe any time.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Success overlay -->
+          <div class="success-ov" id="success-ov">
+            <div class="success-box">
+              <div class="success-check">✓</div>
+              <div class="success-h">You're in.</div>
+              <div class="success-s">All apps unlocked. Check your inbox for a welcome message — it has everything that's live and what's coming next.</div>
+              <button class="success-btn" onclick="dismissSuccess()">Start exploring →</button>
+              <div class="success-apps" id="success-apps"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Minimap -->
+        <div class="mmap">
+          <div class="mm" style="width:85%"></div>
+          <div class="mm" style="width:55%"></div>
+          <div class="mm" style="width:78%"></div>
+          <div class="mmhl"></div>
+          <div class="mm" style="width:62%"></div>
+          <div class="mm" style="width:40%;background:#383838"></div>
+          <div class="mm" style="width:82%"></div>
+          <div class="mm" style="width:50%"></div>
+          <div class="mmhl"></div>
+          <div class="mm" style="width:70%"></div>
+          <div class="mm" style="width:88%"></div>
+          <div class="mm" style="width:44%;background:#383838"></div>
+          <div class="mm" style="width:66%"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Status bar -->
+  <div class="sbar">
+    <div class="sb hi">
+      <svg width="9" height="9" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="4" cy="4" r="1.5"/><circle cx="4" cy="12" r="1.5"/><circle cx="12" cy="4" r="1.5"/><path d="M4 5.5v5M5.5 4h5"/></svg>
+      main
+    </div>
+    <div class="sb" id="sb-count">— apps</div>
+    <div class="sb" id="sb-live">— live</div>
+    <div class="sb">UTF-8</div>
+    <div class="sbr">
+      <div class="sb whi" id="sb-access">✉ free access</div>
+      <div class="sb hi"><div class="sdot"></div>&nbsp;synced</div>
+    </div>
+  </div>
+
+</div><!-- .win -->
+
+<!-- Cmd palette (outside win) -->
+<div class="cmd-ov" id="cmd-ov" onclick="if(event.target===this)toggleCmd()">
+  <div class="cmd-box">
+    <div class="cmd-iw">
+      <span style="font-size:10px;color:var(--t4)">⌘</span>
+      <input class="cmd-in" id="cmd-in" placeholder="app name or command..." oninput="renderCmd(this.value)">
+    </div>
+    <div class="cmd-res" id="cmd-res"></div>
+    <div class="cmd-foot">
+      <span class="cmd-hint">↵ select</span>
+      <span class="cmd-hint">esc close</span>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────────────────
+// APP REGISTRY — edit display names, descriptions,
+// preview types and URLs here. Add new apps by adding
+// a new object. No other code changes needed.
+// ─────────────────────────────────────────────────────
+const APPS = [
+  // ── FEATURED (live browser tools) ───────────────
+  {
+    id:'styleguard', name:'StyleGuard',
+    slug:'style-guard', lang:'JS', dot:'#787878',
+    desc:'Documentation style linter. Flags passive voice, weak verbs, filler words and long sentences in real time.',
+    tags:['linting','docs','nlp'], section:'featured',
+    status:'live', preview:'iframe', requiresEmail:false,
+    url:'https://styleguard.vercel.app', ghUrl:'https://github.com/luke-pekala1-afk/style-guard',
+    stars:0
+  },
+  {
+    id:'glossary-kit', name:'Glossary Kit',
+    slug:'glossary-kit', lang:'JS', dot:'#686868',
+    desc:'Browser-based glossary manager for technical teams. Create, search and export product terminology in CSV, JSON, or Markdown.',
+    tags:['docs','export','javascript'], section:'featured',
+    status:'live', preview:'deploy_pending', requiresEmail:true,
+    ghUrl:'https://github.com/luke-pekala/glossary-kit',
+    deployNote:'Browser-based · deploy with: vercel --prod in /glossary-kit',
+    stars:0
+  },
+  {
+    id:'annotately', name:'Annotately',
+    slug:'annotately', lang:'TypeScript', dot:'#585858',
+    desc:'Browser-based PDF and image annotation tool. Highlight, draw, annotate — no upload, no server.',
+    tags:['pdf','annotation','react'], section:'featured',
+    status:'live', preview:'deploy_pending', requiresEmail:true,
+    ghUrl:'https://github.com/luke-pekala/annotately',
+    deployNote:'React/TypeScript · deploy with: vercel --prod in /annotately',
+    stars:0
+  },
+  // ── DOC TOOLS ────────────────────────────────────
+  {
+    id:'doc-search', name:'DocSearch Pro',
+    slug:'doc-search-pro', lang:'JS', dot:'#686868',
+    desc:'Full-text document search engine. Drop in .txt, .md, or .csv files, get relevance-ranked results with highlighted snippets.',
+    tags:['search','static','javascript'], section:'doc tools',
+    status:'live', preview:'deploy_pending', requiresEmail:true,
+    ghUrl:'https://github.com/luke-pekala/doc-search-pro',
+    deployNote:'Vanilla JS · deploy with: vercel --prod in /doc-search-pro',
+    stars:0
+  },
+  {
+    id:'read-score', name:'ReadScore',
+    slug:'read-score', lang:'JS', dot:'#686868',
+    desc:'Readability analytics for technical documentation. Flesch-Kincaid, sentence complexity, vocabulary density.',
+    tags:['readability','docs','analytics'], section:'doc tools',
+    status:'live', preview:'deploy_pending', requiresEmail:false,
+    ghUrl:'https://github.com/luke-pekala/read-score',
+    deployNote:'CSS/JS · deploy with: vercel --prod in /read-score',
+    stars:0
+  },
+  {
+    id:'doc-struct', name:'DocStruct',
+    slug:'doc-struct', lang:'JS', dot:'#686868',
+    desc:'Browser-based documentation template generator. Outputs structured Markdown ready for any docs system.',
+    tags:['templates','markdown','docs'], section:'doc tools',
+    status:'live', preview:'deploy_pending', requiresEmail:false,
+    ghUrl:'https://github.com/luke-pekala/doc-struct',
+    deployNote:'CSS/JS · deploy with: vercel --prod in /doc-struct',
+    stars:0
+  },
+  {
+    id:'mark-flow', name:'MarkFlow',
+    slug:'mark-flow', lang:'JS', dot:'#686868',
+    desc:'Markdown editor with live preview, document outline, and HTML/PDF export. No login, no install.',
+    tags:['markdown','editor','export'], section:'doc tools',
+    status:'live', preview:'deploy_pending', requiresEmail:true,
+    ghUrl:'https://github.com/luke-pekala/mark-flow',
+    deployNote:'React · deploy with: vercel --prod in /mark-flow',
+    stars:0
+  },
+  {
+    id:'diff-doc', name:'DiffDoc',
+    slug:'diff-doc', lang:'JS', dot:'#686868',
+    desc:'Document diff viewer. Drop in two PDFs, Word docs, or text files and see every change highlighted instantly.',
+    tags:['diff','pdf','react'], section:'doc tools',
+    status:'live', preview:'deploy_pending', requiresEmail:true,
+    ghUrl:'https://github.com/luke-pekala/diff-doc',
+    deployNote:'React · deploy with: vercel --prod in /diff-doc',
+    stars:0
+  },
+  {
+    id:'releasenote', name:'ReleaseNote.io',
+    slug:'releasenote-io', lang:'JS', dot:'#686868',
+    desc:'Full-stack changelog SaaS. Rich text editor, version management, public pages, and RSS feed.',
+    tags:['saas','changelog','rss'], section:'doc tools',
+    status:'live', preview:'deploy_pending', requiresEmail:true,
+    ghUrl:'https://github.com/luke-pekala/releasenote-io',
+    deployNote:'React + Node.js · needs full-stack deploy',
+    stars:0
+  },
+  {
+    id:'link-watch', name:'LinkWatch',
+    slug:'link-watch', lang:'JS', dot:'#686868',
+    desc:'Link monitor. Paste URLs, check HTTP status, page titles, and response times instantly.',
+    tags:['monitoring','react','nodejs'], section:'doc tools',
+    status:'live', preview:'deploy_pending', requiresEmail:false,
+    ghUrl:'https://github.com/luke-pekala/link-watch',
+    deployNote:'React + Node.js backend · needs API deploy',
+    stars:0
+  },
+  // ── AI / ML (Python — code preview cards) ────────
+  {
+    id:'research-crew', name:'Research Crew',
+    slug:'autonomous-research-crew', lang:'Python', dot:'#505050',
+    desc:'Multi-agent research system — specialised agents for searching, analysing, writing and fact-checking.',
+    tags:['agents','llm','python'], section:'ai/ml',
+    status:'live', preview:'code', requiresEmail:false,
+    ghUrl:'https://github.com/luke-pekala/autonomous-research-crew',
+    stars:0,
+    codePreview:[
+      {l:'1',c:'<span class="cm"># autonomous-research-crew</span>'},
+      {l:'2',c:'<span class="cm"># Module Y — Python AI Roadmap</span>'},
+      {l:'3',c:''},
+      {l:'4',c:'<span class="kw">from</span> agents <span class="kw">import</span> Planner, Searcher, Analyst, Writer'},
+      {l:'5',c:'<span class="kw">from</span> anthropic <span class="kw">import</span> Anthropic'},
+      {l:'6',c:''},
+      {l:'7',c:'<span class="kw">async def</span> <span class="fn">research</span>(topic: str) -> str:'},
+      {l:'8',c:'&nbsp;&nbsp;&nbsp;&nbsp;crew = [Planner(), Searcher(), Analyst(), Writer()]'},
+      {l:'9',c:'&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">for</span> agent <span class="kw">in</span> crew:'},
+      {l:'10',c:'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">await</span> agent.run(topic)'},
+      {l:'11',c:'&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> Writer.output'},
+    ]
+  },
+  {
+    id:'smart-summariser', name:'Smart Summariser',
+    slug:'smart-summariser-cli', lang:'Python', dot:'#505050',
+    desc:'CLI tool that summarises documents using Claude API with streaming and JSON output.',
+    tags:['cli','claude','python'], section:'ai/ml',
+    status:'live', preview:'code', requiresEmail:false,
+    ghUrl:'https://github.com/luke-pekala/smart-summariser-cli',
+    stars:0,
+    codePreview:[
+      {l:'1',c:'<span class="cm"># smart-summariser-cli — Module M</span>'},
+      {l:'2',c:''},
+      {l:'3',c:'<span class="kw">import</span> anthropic, click'},
+      {l:'4',c:''},
+      {l:'5',c:'<span class="kw">@click.command()</span>'},
+      {l:'6',c:'<span class="kw">@click.argument(</span><span class="st">\'file\'</span><span class="kw">)</span>'},
+      {l:'7',c:'<span class="kw">def</span> <span class="fn">summarise</span>(file: str):'},
+      {l:'8',c:'&nbsp;&nbsp;&nbsp;&nbsp;client = anthropic.Anthropic()'},
+      {l:'9',c:'&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">with</span> client.messages.stream(...) <span class="kw">as</span> s:'},
+      {l:'10',c:'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">for</span> text <span class="kw">in</span> s.text_stream:'},
+      {l:'11',c:'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;click.echo(text, nl=<span class="kw">False</span>)'},
+    ]
+  },
+  {
+    id:'mnist', name:'MNIST Classifier',
+    slug:'mnist-digit-classifier', lang:'Python', dot:'#505050',
+    desc:'PyTorch neural network classifying handwritten digits with a Streamlit draw-and-predict UI.',
+    tags:['pytorch','deep-learning','streamlit'], section:'ai/ml',
+    status:'live', preview:'code', requiresEmail:false,
+    ghUrl:'https://github.com/luke-pekala/mnist-digit-classifier',
+    stars:0,
+    codePreview:[
+      {l:'1',c:'<span class="cm"># mnist-digit-classifier — Module L</span>'},
+      {l:'2',c:''},
+      {l:'3',c:'<span class="kw">import</span> torch, torch.nn <span class="kw">as</span> nn'},
+      {l:'4',c:''},
+      {l:'5',c:'<span class="kw">class</span> <span class="fn">CNN</span>(nn.Module):'},
+      {l:'6',c:'&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">def</span> <span class="fn">__init__</span>(self):'},
+      {l:'7',c:'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">super()</span>.__init__()'},
+      {l:'8',c:'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.conv1 = nn.Conv2d(<span class="num">1</span>, <span class="num">32</span>, <span class="num">3</span>)'},
+      {l:'9',c:'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.conv2 = nn.Conv2d(<span class="num">32</span>, <span class="num">64</span>, <span class="num">3</span>)'},
+      {l:'10',c:'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.fc = nn.Linear(<span class="num">9216</span>, <span class="num">10</span>)'},
+    ]
+  },
+  {
+    id:'churn', name:'Churn Predictor',
+    slug:'churn-classifier', lang:'Python', dot:'#505050',
+    desc:'Customer churn classifier with full evaluation suite — F1, ROC-AUC, cross-validation and hyperparameter tuning.',
+    tags:['sklearn','classification','ml'], section:'ai/ml',
+    status:'live', preview:'code', requiresEmail:false,
+    ghUrl:'https://github.com/luke-pekala/churn-classifier',
+    stars:0,
+    codePreview:[
+      {l:'1',c:'<span class="cm"># churn-classifier — Module J</span>'},
+      {l:'2',c:''},
+      {l:'3',c:'<span class="kw">from</span> sklearn.pipeline <span class="kw">import</span> Pipeline'},
+      {l:'4',c:'<span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> GradientBoostingClassifier'},
+      {l:'5',c:''},
+      {l:'6',c:'pipe = Pipeline(['},
+      {l:'7',c:'&nbsp;&nbsp;&nbsp;&nbsp;(<span class="st">\'preprocess\'</span>, ColumnTransformer([...])),'},
+      {l:'8',c:'&nbsp;&nbsp;&nbsp;&nbsp;(<span class="st">\'model\'</span>, GradientBoostingClassifier('},
+      {l:'9',c:'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n_estimators=<span class="num">200</span>, max_depth=<span class="num">4</span>'},
+      {l:'10',c:'&nbsp;&nbsp;&nbsp;&nbsp;))'},
+      {l:'11',c:'])'},
+    ]
+  },
+  // ── COMING SOON ───────────────────────────────────
+  {
+    id:'docmind', name:'DocMind AI',
+    slug:'doc-mind-ai', lang:'JS', dot:'#404040',
+    desc:'AI-powered documentation assistant. Ask questions about your docs, get cited answers.',
+    tags:['ai','rag','docs'], section:'coming soon',
+    status:'soon', preview:'coming_soon', requiresEmail:false,
+    ghUrl:'#', stars:0, progress:30
+  },
+  {
+    id:'apiscribe', name:'APIScribe',
+    slug:'apiscribe', lang:'JS', dot:'#404040',
+    desc:'Automatic API documentation generator. Point at an Express or FastAPI codebase, get OpenAPI specs.',
+    tags:['api','docs','automation'], section:'coming soon',
+    status:'soon', preview:'coming_soon', requiresEmail:false,
+    ghUrl:'#', stars:0, progress:15
+  },
+];
+
+// ─────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────
+let sel=null, filter='all', sortMode='stars';
+let isUnlocked = !!localStorage.getItem('pf_unlocked');
+let pendingApp=null;
+let openTabs=[{id:'__home',name:'portfolio-os',dot:'#888'}];
+let activeTab='__home';
+
+// ─────────────────────────────────────────────────────
+// INIT — apply unlock state immediately
+// ─────────────────────────────────────────────────────
+if(isUnlocked){
+  document.getElementById('access-label').textContent='✓ unlocked';
+  document.getElementById('sb-access').textContent='✓ full access';
+}
+
+// ─────────────────────────────────────────────────────
+// ORIENTATION
+// ─────────────────────────────────────────────────────
+function closeOrient(){
+  const o=document.getElementById('orient');
+  o.style.opacity='0';
+  setTimeout(()=>{ o.style.display='none'; },300);
+}
+// Skip orient if returning visitor
+if(localStorage.getItem('pf_visited')) closeOrient();
+else localStorage.setItem('pf_visited','1');
+
+// ─────────────────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────────────────
+function renderTabs(){
+  document.getElementById('tabs').innerHTML =
+    openTabs.map(t=>`
+      <div class="tab ${t.id===activeTab?'on':''}" onclick="switchTab('${t.id}')">
+        <div class="tdot" style="background:${t.dot}"></div>
+        <span style="font-family:var(--sans);font-size:11px">${t.name}</span>
+        <div class="tx" onclick="closeTab(event,'${t.id}')">×</div>
+      </div>`).join('') +
+    '<div style="display:flex;align-items:center;justify-content:center;width:28px;height:40px;color:var(--t4);font-size:14px;cursor:pointer;border-right:1px solid var(--b)">+</div>';
+}
+function switchTab(id){
+  activeTab=id;
+  if(id==='__home') showWelcome();
+  else{ const a=APPS.find(x=>x.id===id); if(a) loadViewer(a); }
+  renderTabs();
+}
+function closeTab(e,id){
+  e.stopPropagation();
+  openTabs=openTabs.filter(t=>t.id!==id);
+  if(!openTabs.length) openTabs=[{id:'__home',name:'portfolio-os',dot:'#888'}];
+  activeTab=openTabs[openTabs.length-1].id;
+  switchTab(activeTab);
+}
+function openTab(app){
+  if(!openTabs.find(t=>t.id===app.id))
+    openTabs.push({id:app.id,name:app.name,dot:app.dot});
+  activeTab=app.id;
+  renderTabs();
+}
+
+// ─────────────────────────────────────────────────────
+// TREE
+// ─────────────────────────────────────────────────────
+function renderTree(){
+  const secs={};
+  APPS.forEach(a=>{ if(!secs[a.section])secs[a.section]=[]; secs[a.section].push(a); });
+  let h='';
+  Object.entries(secs).forEach(([s,apps])=>{
+    h+=`<div class="tsec">${s}</div>`;
+    apps.forEach(a=>{
+      const pill = a.status==='soon'
+        ? `<span class="tipill p-soon">soon</span>`
+        : a.preview==='code'
+        ? `<span class="tipill p-code">py</span>`
+        : a.preview==='iframe'
+        ? `<span class="tipill p-live">live</span>`
+        : a.requiresEmail&&!isUnlocked
+        ? `<span class="tipill p-email">✉</span>`
+        : `<span class="tipill p-live">web</span>`;
+      h+=`<div class="ti ${sel===a.id?'on':''}" onclick="selectApp('${a.id}')">
+        <div class="tidot" style="background:${a.dot}"></div>
+        <span class="tiname">${a.name}</span>${pill}
+      </div>`;
+    });
+  });
+  document.getElementById('tree').innerHTML=h;
+}
+
+// ─────────────────────────────────────────────────────
+// APP LIST
+// ─────────────────────────────────────────────────────
+function renderList(){
+  const q=document.getElementById('search').value.toLowerCase();
+  let list=[...APPS];
+  if(filter==='live') list=list.filter(a=>a.status==='live');
+  else if(filter==='soon') list=list.filter(a=>a.status==='soon');
+  if(q) list=list.filter(a=>(a.name+a.slug+a.desc+(a.tags||[]).join(' ')).toLowerCase().includes(q));
+  if(sortMode==='name') list.sort((a,b)=>a.name.localeCompare(b.name));
+
+  const locked = a => a.requiresEmail && !isUnlocked;
+  document.getElementById('alist').innerHTML = list.map(a=>{
+    const runLabel = a.status==='soon' ? 'soon'
+      : a.preview==='code' ? '< >' 
+      : locked(a) ? '✉ unlock' : '▶ run';
+    const runDim = a.status==='soon';
+    return `<div class="ac ${sel===a.id?'sel':''}" onclick="selectApp('${a.id}')">
+      <div class="ac-top">
+        <div class="ac-dot" style="background:${a.dot}"></div>
+        <div class="ac-info">
+          <div class="ac-name">${a.name}</div>
+          <div class="ac-slug">${a.slug}</div>
+          <div class="ac-desc">${a.desc}</div>
+        </div>
+        <button class="ac-run ${runDim?'dim':''}" onclick="handleRun(event,'${a.id}')">${runLabel}</button>
+      </div>
+      <div class="ac-foot">
+        ${(a.tags||[]).map(t=>`<span class="atag">${t}</span>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('sb-count').textContent = APPS.length+' apps';
+  document.getElementById('sb-live').textContent = APPS.filter(a=>a.status==='live').length+' live';
+}
+
+function setFilter(f,el){
+  filter=f;
+  document.querySelectorAll('.fp').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on'); renderList();
+}
+const sorts=['stars','name']; let si=0;
+function cycleSort(){
+  si=(si+1)%sorts.length; sortMode=sorts[si];
+  document.getElementById('sort-btn').textContent='↕ '+sortMode;
+  renderList();
+}
+
+// ─────────────────────────────────────────────────────
+// SELECT / LOAD
+// ─────────────────────────────────────────────────────
+function selectApp(id){
+  const app=APPS.find(a=>a.id===id); if(!app) return;
+  sel=id;
+  document.getElementById('bc-sec').textContent=app.section;
+  document.getElementById('bc-file').textContent=app.slug;
+  document.getElementById('vt').textContent=app.name;
+  const eb=document.getElementById('ext-btn');
+  eb.style.display=app.url||app.ghUrl?'block':'none';
+  renderList(); renderTree();
+  if(app.requiresEmail && !isUnlocked){ showGate(app); return; }
+  openTab(app); loadViewer(app);
+}
+function handleRun(e,id){ e.stopPropagation(); selectApp(id); }
+
+function loadViewer(app){
+  if(!app) return;
+  if(app.status==='soon') showComingSoon(app);
+  else if(app.preview==='iframe') showIframe(app);
+  else if(app.preview==='deploy_pending') showDeployPending(app);
+  else if(app.preview==='code') showCodePreview(app);
+  else showDeployPending(app);
+}
+
+// ─────────────────────────────────────────────────────
+// VIEW STATES
+// ─────────────────────────────────────────────────────
+function showWelcome(){
+  sel=null;
+  document.getElementById('bc-file').textContent='—';
+  document.getElementById('vt').textContent='preview';
+  document.getElementById('ext-btn').style.display='none';
+  document.getElementById('viewer').innerHTML=`
+    <div class="welcome">
+      <svg width="38" height="38" viewBox="0 0 40 40" fill="none"><rect x="3" y="3" width="34" height="34" rx="5" stroke="#888" stroke-width="1"/><path d="M11 15h7M11 20h10M11 25h5" stroke="#888" stroke-width="1" stroke-linecap="round"/><circle cx="29" cy="20" r="5" stroke="#888" stroke-width="1" opacity=".5"/></svg>
+      <h3>select an app to preview</h3>
+      <p>click any app on the left to open it in split view</p>
+      <div class="wh">styleguard runs live · all others link to github<br>deploy pending apps unlock with your email</div>
+    </div>`;
+  renderList(); renderTree();
+}
+
+function showIframe(app){
+  document.getElementById('viewer').innerHTML=`
+    <div class="embed">
+      <div class="ebar">
+        <div class="edots">
+          <div class="edot" style="background:#ff5f57"></div>
+          <div class="edot" style="background:#febc2e"></div>
+          <div class="edot" style="background:#28c840"></div>
+        </div>
+        <div class="eurl">${app.url}</div>
+        <div class="elive"><div class="elivdot"></div>live</div>
+      </div>
+      <iframe class="eframe" src="${app.url}" sandbox="allow-scripts allow-same-origin allow-forms" loading="lazy"></iframe>
+    </div>`;
+}
+
+function showDeployPending(app){
+  document.getElementById('viewer').innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:20px;">
+      <div class="deploy-pend">
+        <div class="dp-head">
+          <div style="width:7px;height:7px;border-radius:50%;background:${app.dot};flex-shrink:0"></div>
+          <span style="font-family:var(--sans);font-size:12px">${app.name}</span>
+          <span style="margin-left:auto;font-size:9px;color:var(--t4)">${app.lang}</span>
+        </div>
+        <div class="dp-body">
+          <div class="dp-title">${app.name}</div>
+          <div class="dp-desc">${app.desc}</div>
+          <div class="dp-tags">${(app.tags||[]).map(t=>`<span class="dp-tag">${t}</span>`).join('')}</div>
+          <div class="dp-status">
+            <div class="dp-status-dot"></div>
+            <span>deploy pending — ${app.deployNote||'run vercel --prod to go live'}</span>
+          </div>
+          <div class="dp-links">
+            <a class="dp-link pri" href="${app.ghUrl}" target="_blank">View source on GitHub ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function showCodePreview(app){
+  if(!app.codePreview){ showDeployPending(app); return; }
+  const lines = app.codePreview.map(l=>
+    `<div class="cp-line"><span class="ln">${l.l}</span><span class="lc">${l.c}</span></div>`
+  ).join('');
+  document.getElementById('viewer').innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:20px;">
+      <div class="code-prev">
+        <div class="cp-head">
+          <div style="width:7px;height:7px;border-radius:50%;background:${app.dot};flex-shrink:0"></div>
+          <span style="font-family:var(--sans);font-size:12px">${app.name}</span>
+          <span style="margin-left:auto;font-size:9px;color:var(--t4)">main.py</span>
+        </div>
+        <div class="cp-body">
+          ${lines}
+          <a class="cp-link" href="${app.ghUrl}" target="_blank">View full source on GitHub ↗</a>
+        </div>
+      </div>
+    </div>`;
+}
+
+function showComingSoon(app){
+  const prog=app.progress||20;
+  document.getElementById('viewer').innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:20px;">
+      <div class="cs">
+        <div class="csh">
+          <div style="width:7px;height:7px;border-radius:50%;background:${app.dot};flex-shrink:0"></div>
+          <span style="font-family:var(--sans);font-size:12px">${app.name}</span>
+          <span style="margin-left:auto;font-size:8px;color:var(--t4)">● unsaved</span>
+        </div>
+        <div class="csb">
+          <div class="cp-line"><span class="ln">1</span><span class="lc"><span class="cm"># ${app.slug} — in progress</span></span></div>
+          <div class="cp-line"><span class="ln">2</span><span class="lc"></span></div>
+          <div class="cp-line"><span class="ln">3</span><span class="lc"><span class="kw">from</span> anthropic <span class="kw">import</span> Anthropic</span></div>
+          <div class="cp-line"><span class="ln">4</span><span class="lc"><span class="kw">import</span> asyncio</span></div>
+          <div class="cp-line"><span class="ln">5</span><span class="lc"></span></div>
+          <div class="cp-line"><span class="ln">6</span><span class="lc"><span class="kw">async def</span> <span class="fn">main</span>(): <span class="cm"># TODO: ship this</span></span></div>
+          <div class="cp-line"><span class="ln">7</span><span class="lc">&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">pass</span><span class="cursor"></span></span></div>
+          <div class="csprog">
+            <div class="csprog-l"><span>build progress</span><span>${prog}%</span></div>
+            <div class="csprog-t"><div class="csprog-f" style="width:${prog}%"></div></div>
+          </div>
+          <div class="cs-notify">
+            <input class="cs-email" type="email" placeholder="notify me when live...">
+            <button class="cs-nbtn" onclick="csNotify(this)">notify me</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ─────────────────────────────────────────────────────
+// GATE
+// ─────────────────────────────────────────────────────
+function showGate(app){
+  pendingApp=app;
+  const icons={styleguard:'📝',glossary:'📚',annotately:'✏️','doc-search':'🔍','read-score':'📊','doc-struct':'🗂️','mark-flow':'✍️','diff-doc':'⚖️',releasenote:'📦','link-watch':'🔗'};
+  document.getElementById('gate-ico').textContent = icons[app.id]||'🔓';
+  document.getElementById('gate-h').textContent = `Unlock ${app.name}`;
+  document.getElementById('gate-s').textContent = `Enter your email to run ${app.name} and every other app in the portfolio — free, permanently. One email, everything unlocked.`;
+  const ov=document.getElementById('gate-ov');
+  ov.classList.add('show');
+  setTimeout(()=>document.getElementById('gate-email').focus(),150);
+}
+function openGateGlobal(){
+  if(isUnlocked){ showToast('Already unlocked ✓'); return; }
+  pendingApp=null;
+  document.getElementById('gate-ico').textContent='🔓';
+  document.getElementById('gate-h').textContent='Run all apps free';
+  document.getElementById('gate-s').textContent='Enter your email to unlock every app — no payment, no account. One email, permanent access.';
+  document.getElementById('gate-ov').classList.add('show');
+  setTimeout(()=>document.getElementById('gate-email').focus(),150);
+}
+function gateOutside(e){
+  if(e.target===document.getElementById('gate-ov'))
+    document.getElementById('gate-ov').classList.remove('show');
+}
+
+async function submitGate(){
+  const inp=document.getElementById('gate-email');
+  const email=inp.value.trim();
+  if(!email||!email.includes('@')){
+    inp.classList.add('err');
+    setTimeout(()=>inp.classList.remove('err'),400);
+    return;
+  }
+  const btn=document.getElementById('gate-btn');
+  btn.disabled=true; btn.textContent='Unlocking...';
+
+  // Call backend
+  try{
+    await fetch('/api/gate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        email, appId: pendingApp?.id||'global',
+        appName: pendingApp?.name||'global', ts: new Date().toISOString()
+      })
+    });
+  }catch(e){ /* fail silently — still unlock locally */ }
+
+  // Unlock regardless of API response
+  isUnlocked=true;
+  localStorage.setItem('pf_unlocked','1');
+  localStorage.setItem('pf_email', email);
+  document.getElementById('gate-ov').classList.remove('show');
+  document.getElementById('access-label').textContent='✓ unlocked';
+  document.getElementById('sb-access').textContent='✓ full access';
+  document.getElementById('success-ov').classList.add('show');
+  document.getElementById('success-apps').innerHTML =
+    APPS.filter(a=>a.status==='live'&&a.preview!=='code').map(a=>`<span class="sapp">${a.name}</span>`).join('');
+  btn.disabled=false; btn.textContent='Unlock all apps →';
+  inp.value='';
+  renderList(); renderTree();
+}
+
+function dismissSuccess(){
+  document.getElementById('success-ov').classList.remove('show');
+  if(pendingApp){ openTab(pendingApp); loadViewer(pendingApp); pendingApp=null; }
+  else showWelcome();
+}
+
+function csNotify(btn){
+  const input=btn.previousElementSibling;
+  const email=input?.value?.trim();
+  if(!email||!email.includes('@')){
+    if(input){ input.style.borderColor='#555'; setTimeout(()=>input.style.borderColor='',400); }
+    return;
+  }
+  fetch('/api/gate',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({email,appId:'notify-'+sel,appName:sel,ts:new Date().toISOString(),type:'notify'})
+  }).catch(()=>{});
+  btn.textContent='✓';
+  btn.style.color='var(--t2)';
+  btn.disabled=true;
+  if(input) input.disabled=true;
+}
+
+function openExternal(){
+  const app=APPS.find(a=>a.id===sel);
+  if(!app) return;
+  const url=app.url||app.ghUrl;
+  if(url&&url!=='#') window.open(url,'_blank');
+}
+
+// ─────────────────────────────────────────────────────
+// CMD PALETTE
+// ─────────────────────────────────────────────────────
+function toggleCmd(){
+  const ov=document.getElementById('cmd-ov');
+  const show=ov.classList.contains('show');
+  ov.classList.toggle('show');
+  if(!show){ document.getElementById('cmd-in').value=''; renderCmd(''); document.getElementById('cmd-in').focus(); }
+}
+function renderCmd(q){
+  const base=[
+    {ic:'🔓',lbl:'unlock all apps',fn:()=>openGateGlobal()},
+    {ic:'▶',lbl:'run StyleGuard (live)',fn:()=>selectApp('styleguard')},
+    {ic:'/',lbl:'filter: live apps',fn:()=>{filter='live';document.querySelectorAll('.fp').forEach((p,i)=>p.classList.toggle('on',i===1));renderList();}},
+    {ic:'/',lbl:'filter: coming soon',fn:()=>{filter='soon';document.querySelectorAll('.fp').forEach((p,i)=>p.classList.toggle('on',i===2));renderList();}},
+    {ic:'↕',lbl:'sort by name',fn:()=>{sortMode='name';document.getElementById('sort-btn').textContent='↕ name';renderList();}},
+    ...APPS.map(a=>({ic:a.status==='soon'?'◌':a.preview==='code'?'<>':'▶',lbl:'open '+a.name,fn:()=>selectApp(a.id)}))
+  ];
+  const filtered=q?base.filter(c=>c.lbl.toLowerCase().includes(q.toLowerCase())):base.slice(0,8);
+  document.getElementById('cmd-res').innerHTML=filtered.map(c=>`
+    <div class="cmd-row" onclick="document.getElementById('cmd-ov').classList.remove('show');(${c.fn.toString()})()">
+      <span class="cmd-ico">${c.ic}</span>${c.lbl}
+    </div>`).join('');
+}
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();toggleCmd();}
+  if(e.key==='Escape') document.getElementById('cmd-ov').classList.remove('show');
+});
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ─────────────────────────────────────────────────────
+// TRACK app opens (fire and forget)
+// ─────────────────────────────────────────────────────
+function track(appId){
+  fetch('/api/track',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({appId,ts:new Date().toISOString(),email:localStorage.getItem('pf_email')||''})
+  }).catch(()=>{});
+}
+
+// Override selectApp to also track
+const _selectApp=selectApp;
+// Track is called after unlock so we just add it to loadViewer
+const _loadViewer=loadViewer;
+window._origLoadViewer=_loadViewer;
+window.loadViewer=function(app){
+  track(app.id);
+  _origLoadViewer(app);
+};
+
+// ─────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────
+renderTabs();
+renderTree();
+renderList();
+</script>
+</body>
+</html>
