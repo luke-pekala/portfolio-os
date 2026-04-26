@@ -2,11 +2,16 @@
   "version": 2,
   "builds": [
     { "src": "public/**", "use": "@vercel/static" },
-    { "src": "api/**", "use": "@vercel/node" }
+    { "src": "api/gate.js", "use": "@vercel/node" },
+    { "src": "api/track.js", "use": "@vercel/node" },
+    { "src": "api/admin-data.js", "use": "@vercel/node" }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/api/gate", "dest": "/api/gate.js" },
+    { "src": "/api/track", "dest": "/api/track.js" },
+    { "src": "/api/admin-data", "dest": "/api/admin-data.js" },
     { "src": "/admin", "dest": "/public/admin.html" },
+    { "src": "/", "dest": "/public/index.html" },
     { "src": "/(.*)", "dest": "/public/$1" }
   ]
 }
