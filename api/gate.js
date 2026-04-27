@@ -101,7 +101,7 @@ p{font-size:14px;line-height:1.75;color:#888;margin:0 0 16px;}
 .foot a{color:#484848;}
 </style></head>
 <body><div class="w">
-  <div class="logo">luke-pekala / portfolio-os</div>
+  <div class="logo">ai-engineer.app</div>
   <h1>You're in.</h1>
   <p>All apps are unlocked. You accessed via <strong style="color:#d4d4d4">${appName}</strong> — everything else is open too.</p>
   <div class="apps">
@@ -112,11 +112,11 @@ p{font-size:14px;line-height:1.75;color:#888;margin:0 0 16px;}
     <div class="app-row"><div class="app-dot"></div>MarkFlow<span class="app-live">deploy pending</span></div>
     <div class="app-row"><div class="app-dot"></div>+ more deploying soon</div>
   </div>
-  <a href="${process.env.NEXT_PUBLIC_URL || 'https://portfolio-os.vercel.app'}" class="cta">Open Portfolio OS →</a>
+  <a href="${process.env.NEXT_PUBLIC_URL || 'https://ai-engineer.app'}" class="cta">Open Portfolio OS →</a>
   <div class="div"></div>
   <div class="foot">
     You'll receive one email when a new tool ships — nothing else.<br>
-    <a href="#">Unsubscribe</a> at any time.
+    <a href="mailto:lukepekala@gmail.com?subject=Unsubscribe me">Unsubscribe</a> at any time.
   </div>
 </div></body>
 </html>`;
