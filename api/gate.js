@@ -146,7 +146,7 @@ export default async function handler(req) {
     try {
       const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({
-        from: 'Luke Pekala <hello@lukepekala.dev>',
+        from: 'Luke Pekala <hello@ai-engineer.app>',
         to: email,
         subject: "You're in — Portfolio OS unlocked",
         html: welcomeEmail(email, appName || 'the portfolio'),
@@ -154,7 +154,7 @@ export default async function handler(req) {
 
       // Notify owner
       await resend.emails.send({
-        from: 'Portfolio OS <hello@lukepekala.dev>',
+        from: 'Portfolio OS <noreply@ai-engineer.app>',
         to: process.env.OWNER_EMAIL || 'lukepekala@gmail.com',
         subject: `New signup: ${email}`,
         html: `<div style="background:#080808;padding:24px;font-family:monospace;font-size:13px;color:#888;max-width:400px;margin:0 auto;border-radius:4px;">
