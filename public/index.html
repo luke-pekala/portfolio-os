@@ -44,13 +44,13 @@ body{font-family:var(--mono);display:flex;align-items:center;justify-content:cen
 .tld:nth-child(3){background:#28c840;}
 .tabs{display:flex;flex:1;overflow:hidden;min-width:0;}
 .tab{
-  display:flex;align-items:center;gap:6px;padding:0 12px;height:40px;
+  display:flex;align-items:center;gap:5px;padding:0 10px;height:40px;
   font-size:11px;color:var(--t3);border-right:1px solid var(--b);
-  cursor:pointer;flex-shrink:1;white-space:nowrap;
+  cursor:pointer;flex:0 1 130px;min-width:50px;white-space:nowrap;
   transition:color .15s;border-bottom:2px solid transparent;margin-bottom:-1px;
-  max-width:140px;min-width:60px;overflow:hidden;
+  overflow:hidden;
 }
-.tab span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;}
+.tab span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;display:block;}
 .tab:hover{color:var(--t2);}
 .tab.on{color:var(--text);background:var(--bg3);border-bottom-color:#707070;}
 .tdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
@@ -249,7 +249,14 @@ body{font-family:var(--mono);display:flex;align-items:center;justify-content:cen
 .elive{display:flex;align-items:center;gap:4px;font-size:9px;color:#777;}
 .elivdot{width:5px;height:5px;border-radius:50%;background:#777;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.eframe{flex:1;border:none;background:var(--bg4);}
+.eframe-wrap{flex:1;overflow:hidden;position:relative;}
+.eframe{
+  position:absolute;top:0;left:0;
+  width:150%;height:150%;
+  border:none;background:var(--bg4);
+  transform:scale(0.667);
+  transform-origin:top left;
+}
 
 /* Deploy pending */
 .deploy-pend{width:100%;max-width:420px;}
@@ -1064,8 +1071,11 @@ function showIframe(app){
         <div class="eurl">${app.url}</div>
         <div class="elive"><div class="elivdot"></div>live</div>
       </div>
-      <iframe class="eframe" src="${app.url}" sandbox="allow-scripts allow-same-origin allow-forms" loading="lazy"></iframe>
+      <div class="eframe-wrap">
+        <iframe class="eframe" src="${app.url}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" loading="lazy"></iframe>
+      </div>
     </div>`;
+}
 }
 
 function showDeployPending(app){
