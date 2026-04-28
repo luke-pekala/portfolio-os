@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 <title>Luke Pekala — Portfolio OS</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -492,22 +491,18 @@ body{font-family:var(--mono);display:flex;align-items:center;justify-content:cen
 
     <!-- Activity bar -->
     <div class="actbar">
-      <div class="ai on" title="Explorer">
+      <div class="ai on" id="act-explorer" title="Explorer" onclick="actClick('explorer')">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 2h7l3 3v9H3V2z"/><path d="M10 2v3h3"/></svg>
       </div>
-      <div class="ai" title="Search">
+      <div class="ai" id="act-search" title="Search" onclick="actClick('search')">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="6.5" cy="6.5" r="4"/><line x1="9.5" y1="9.5" x2="14" y2="14"/></svg>
       </div>
-      <div class="ai" title="Git" style="position:relative;">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="4" cy="4" r="1.5"/><circle cx="4" cy="12" r="1.5"/><circle cx="12" cy="4" r="1.5"/><path d="M4 5.5v5M5.5 4h5"/></svg>
-        <div class="abadge"></div>
-      </div>
       <div class="ai-sp"></div>
-      <div class="ai" title="Account">
+      <div class="ai" id="act-account" title="Account" onclick="actClick('account')">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="5" r="2.5"/><path d="M2.5 14c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>
       </div>
-      <div class="ai" title="Settings">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
+      <div class="ai" id="act-theme" title="Toggle theme" onclick="toggleTheme()">
+        <svg id="theme-icon" width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
       </div>
     </div>
 
@@ -679,8 +674,8 @@ const APPS = [
     desc:'Browser-based glossary manager for technical teams. Create, search and export product terminology in CSV, JSON, or Markdown.',
     tags:['docs','export','javascript'], section:'featured',
     status:'live', preview:'iframe', requiresEmail:true,
-    url:'https://glossary.ai-engineer.app', ghUrl:'https://github.com/luke-pekala/glossary-kit',
-    deployNote:'Browser-based · deploy with: vercel --prod in /glossary-kit',
+    url:'https://glossary.ai-engineer.app',
+    ghUrl:'https://github.com/luke-pekala/glossary-kit',
     stars:0
   },
   {
@@ -719,9 +714,9 @@ const APPS = [
     slug:'doc-struct', lang:'JS', dot:'#686868',
     desc:'Browser-based documentation template generator. Outputs structured Markdown ready for any docs system.',
     tags:['templates','markdown','docs'], section:'doc tools',
-    status:'live', preview:'deploy_pending', requiresEmail:false,
+    status:'live', preview:'iframe', requiresEmail:false,
+    url:'https://docstruct.vercel.app',
     ghUrl:'https://github.com/luke-pekala/doc-struct',
-    deployNote:'CSS/JS · deploy with: vercel --prod in /doc-struct',
     stars:0
   },
   {
@@ -1298,6 +1293,81 @@ window.loadViewer=function(app){
   track(app.id);
   _origLoadViewer(app);
 };
+
+// ─────────────────────────────────────────────────────
+// ACTIVITY BAR
+// ─────────────────────────────────────────────────────
+function actClick(type){
+  // Reset all
+  ['explorer','search','account'].forEach(id=>{
+    const el=document.getElementById('act-'+id);
+    if(el) el.classList.remove('on');
+  });
+
+  if(type==='explorer'){
+    document.getElementById('act-explorer').classList.add('on');
+    // Show sidebar if hidden
+    document.querySelector('.sidebar').style.display='flex';
+  } else if(type==='search'){
+    document.getElementById('act-search').classList.add('on');
+    // Focus search input and scroll to it
+    const inp=document.getElementById('search');
+    if(inp){ inp.focus(); inp.select(); }
+    showToast('Search focused');
+  } else if(type==='account'){
+    document.getElementById('act-account').classList.add('on');
+    if(isUnlocked){
+      const email=localStorage.getItem('pf_email')||'';
+      showToast(email ? 'Unlocked: '+email : 'Full access unlocked');
+    } else {
+      openGateGlobal();
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────
+// THEME TOGGLE
+// ─────────────────────────────────────────────────────
+let isDark=true;
+function toggleTheme(){
+  isDark=!isDark;
+  const r=document.documentElement.style;
+  if(isDark){
+    r.setProperty('--bg','#080808');
+    r.setProperty('--bg2','#0e0e0e');
+    r.setProperty('--bg3','#121212');
+    r.setProperty('--bg4','#161616');
+    r.setProperty('--b','#1e1e1e');
+    r.setProperty('--b2','#282828');
+    r.setProperty('--b3','#343434');
+    r.setProperty('--text','#d4d4d4');
+    r.setProperty('--t2','#888');
+    r.setProperty('--t3','#484848');
+    r.setProperty('--t4','#2a2a2a');
+    r.setProperty('--whi','#f0f0f0');
+    document.getElementById('theme-icon').innerHTML='<circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/>';
+    showToast('Dark mode');
+  } else {
+    r.setProperty('--bg','#f8f8f8');
+    r.setProperty('--bg2','#f0f0f0');
+    r.setProperty('--bg3','#e8e8e8');
+    r.setProperty('--bg4','#e0e0e0');
+    r.setProperty('--b','#d0d0d0');
+    r.setProperty('--b2','#c0c0c0');
+    r.setProperty('--b3','#a8a8a8');
+    r.setProperty('--text','#1a1a1a');
+    r.setProperty('--t2','#444');
+    r.setProperty('--t3','#777');
+    r.setProperty('--t4','#aaa');
+    r.setProperty('--whi','#111');
+    document.getElementById('theme-icon').innerHTML='<path d="M12 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM8 2a6 6 0 0 0 0 12A6 6 0 0 0 8 2z"/>';
+    showToast('Light mode');
+  }
+  localStorage.setItem('pf_theme', isDark?'dark':'light');
+}
+
+// Restore saved theme
+if(localStorage.getItem('pf_theme')==='light'){ isDark=true; toggleTheme(); }
 
 // ─────────────────────────────────────────────────────
 // INIT
