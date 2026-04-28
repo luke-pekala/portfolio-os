@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 <title>Luke Pekala — Portfolio OS</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -43,11 +44,13 @@ body{font-family:var(--mono);display:flex;align-items:center;justify-content:cen
 .tld:nth-child(3){background:#28c840;}
 .tabs{display:flex;flex:1;overflow:hidden;min-width:0;}
 .tab{
-  display:flex;align-items:center;gap:6px;padding:0 14px;height:40px;
+  display:flex;align-items:center;gap:6px;padding:0 12px;height:40px;
   font-size:11px;color:var(--t3);border-right:1px solid var(--b);
-  cursor:pointer;flex-shrink:0;white-space:nowrap;
+  cursor:pointer;flex-shrink:1;white-space:nowrap;
   transition:color .15s;border-bottom:2px solid transparent;margin-bottom:-1px;
+  max-width:140px;min-width:60px;overflow:hidden;
 }
+.tab span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0;}
 .tab:hover{color:var(--t2);}
 .tab.on{color:var(--text);background:var(--bg3);border-bottom-color:#707070;}
 .tdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
@@ -704,9 +707,9 @@ const APPS = [
     slug:'read-score', lang:'JS', dot:'#686868',
     desc:'Readability analytics for technical documentation. Flesch-Kincaid, sentence complexity, vocabulary density.',
     tags:['readability','docs','analytics'], section:'doc tools',
-    status:'live', preview:'deploy_pending', requiresEmail:false,
+    status:'live', preview:'iframe', requiresEmail:false,
+    url:'https://readscore.vercel.app',
     ghUrl:'https://github.com/luke-pekala/read-score',
-    deployNote:'CSS/JS · deploy with: vercel --prod in /read-score',
     stars:0
   },
   {
@@ -734,9 +737,9 @@ const APPS = [
     slug:'diff-doc', lang:'JS', dot:'#686868',
     desc:'Document diff viewer. Drop in two PDFs, Word docs, or text files and see every change highlighted instantly.',
     tags:['diff','pdf','react'], section:'doc tools',
-    status:'live', preview:'deploy_pending', requiresEmail:true,
+    status:'live', preview:'iframe', requiresEmail:true,
+    url:'https://diffdoc.vercel.app',
     ghUrl:'https://github.com/luke-pekala/diff-doc',
-    deployNote:'React · deploy with: vercel --prod in /diff-doc',
     stars:0
   },
   {
