@@ -44,9 +44,9 @@ body{font-family:var(--mono);display:flex;align-items:center;justify-content:cen
 .tld:nth-child(3){background:#28c840;}
 .tabs{display:flex;flex:1;overflow:hidden;min-width:0;}
 .tab{
-  display:flex;align-items:center;gap:5px;padding:0 10px;height:40px;
+  display:flex;align-items:center;gap:5px;padding:0 8px;height:40px;
   font-size:11px;color:var(--t3);border-right:1px solid var(--b);
-  cursor:pointer;flex:0 1 130px;min-width:50px;white-space:nowrap;
+  cursor:pointer;flex:0 1 110px;min-width:44px;
   transition:color .15s;border-bottom:2px solid transparent;margin-bottom:-1px;
   overflow:hidden;
 }
@@ -61,7 +61,7 @@ body{font-family:var(--mono);display:flex;align-items:center;justify-content:cen
 }
 .tab.on .tx,.tab:hover .tx{color:var(--t3);}
 .tx:hover{color:var(--text)!important;}
-.tbar-mid{position:absolute;left:50%;transform:translateX(-50%);font-size:11px;color:var(--t4);pointer-events:none;}
+.tbar-mid{display:none;}
 .tbar-r{margin-left:auto;display:flex;gap:5px;flex-shrink:0;}
 .tbtn{
   height:26px;padding:0 10px;border-radius:3px;
