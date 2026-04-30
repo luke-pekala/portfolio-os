@@ -13,6 +13,7 @@
     { "src": "/api/admin-data", "dest": "/api/admin-data.js" },
     { "src": "/api/deploy-notify", "dest": "/api/deploy-notify.js" },
     { "src": "/admin", "dest": "/public/admin.html" },
+    { "src": "/privacy", "dest": "/public/privacy.html" },
     { "src": "/", "dest": "/public/index.html" },
     { "src": "/(.*)", "dest": "/public/$1" }
   ]

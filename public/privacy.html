@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<title>Privacy Policy — ai-engineer.app</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Syne:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;--bg2:#0e0e0e;--bg3:#121212;
+  --b:#1e1e1e;--b2:#282828;
+  --text:#d4d4d4;--t2:#888;--t3:#484848;--t4:#2a2a2a;
+  --mono:'JetBrains Mono',monospace;--sans:'Syne',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+
+/* Nav */
+nav{
+  position:sticky;top:0;z-index:100;
+  border-bottom:1px solid var(--b);
+  background:rgba(8,8,8,0.92);backdrop-filter:blur(12px);
+}
+.nav-in{
+  max-width:760px;margin:0 auto;padding:0 32px;
+  height:48px;display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{font-family:var(--mono);font-size:12px;color:var(--t3);text-decoration:none;transition:color .15s;}
+.nav-logo:hover{color:var(--t2);}
+.nav-back{
+  font-family:var(--mono);font-size:11px;color:var(--t3);
+  text-decoration:none;display:flex;align-items:center;gap:6px;
+  transition:color .15s;
+}
+.nav-back:hover{color:var(--t2);}
+
+/* Content */
+.wrap{max-width:760px;margin:0 auto;padding:56px 32px 80px;}
+
+/* Header */
+.doc-header{margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid var(--b);}
+.doc-eyebrow{
+  font-family:var(--mono);font-size:10px;color:var(--t3);
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.doc-eyebrow::before{content:'';display:inline-block;width:16px;height:1px;background:var(--t3);}
+.doc-h1{
+  font-size:clamp(24px,3vw,36px);font-weight:300;
+  letter-spacing:-.03em;color:var(--text);line-height:1.15;margin-bottom:10px;
+}
+.doc-h1 strong{font-weight:600;}
+.doc-meta{font-family:var(--mono);font-size:11px;color:var(--t4);}
+
+/* Sections */
+.section{margin-bottom:44px;}
+.sh{
+  display:flex;align-items:center;gap:14px;margin-bottom:20px;
+}
+.sh-num{font-family:var(--mono);font-size:10px;color:var(--t4);flex-shrink:0;}
+.sh-title{font-size:12px;font-weight:500;color:var(--t2);letter-spacing:.07em;text-transform:uppercase;flex-shrink:0;}
+.sh-rule{flex:1;height:1px;background:var(--b);}
+
+p{font-size:14px;color:var(--t2);line-height:1.8;margin-bottom:12px;}
+p:last-child{margin-bottom:0;}
+strong{color:var(--text);font-weight:500;}
+a{color:var(--t2);transition:color .15s;}
+a:hover{color:var(--text);}
+
+/* Data table */
+.data-table{width:100%;border-collapse:collapse;margin:4px 0 16px;}
+.data-table th{
+  padding:9px 14px;font-family:var(--mono);font-size:9px;
+  color:var(--t4);font-weight:400;letter-spacing:.07em;text-transform:uppercase;
+  border-bottom:1px solid var(--b);text-align:left;background:var(--bg3);
+}
+.data-table td{
+  padding:10px 14px;font-size:12px;color:var(--t3);
+  border-bottom:1px solid var(--b);vertical-align:top;
+  line-height:1.6;
+}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table td:first-child{color:var(--text);font-family:var(--mono);font-size:11px;white-space:nowrap;}
+.data-table a{font-family:var(--mono);font-size:10px;}
+
+/* Inline code */
+code{
+  font-family:var(--mono);font-size:11px;
+  padding:2px 6px;background:var(--bg3);
+  border:1px solid var(--b);border-radius:3px;
+  color:var(--t2);
+}
+
+/* Highlight box */
+.highlight{
+  padding:14px 16px;background:var(--bg2);
+  border:1px solid var(--b);border-left:2px solid var(--b2);
+  border-radius:0 4px 4px 0;
+  font-size:13px;color:var(--t3);line-height:1.7;
+  margin:12px 0;
+}
+
+/* Contact */
+.contact-box{
+  padding:20px 24px;background:var(--bg2);
+  border:1px solid var(--b);border-radius:5px;
+  margin-top:8px;
+}
+.contact-box p{font-size:13px;}
+.contact-email{
+  display:inline-block;margin-top:10px;
+  font-family:var(--mono);font-size:12px;
+  color:var(--t2);text-decoration:none;
+  padding:7px 14px;border:1px solid var(--b2);border-radius:3px;
+  transition:color .15s,border-color .15s;
+}
+.contact-email:hover{color:var(--text);border-color:var(--t3);}
+
+/* Footer */
+footer{
+  margin-top:64px;padding-top:24px;
+  border-top:1px solid var(--b);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+}
+.foot-l{font-family:var(--mono);font-size:10px;color:var(--t4);}
+.foot-r{font-family:var(--mono);font-size:10px;color:var(--t4);}
+.foot-r a{color:var(--t3);text-decoration:none;transition:color .15s;}
+.foot-r a:hover{color:var(--t2);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a href="/" class="nav-logo">ai-engineer.app</a>
+    <a href="/" class="nav-back">← back to portfolio</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="doc-header">
+    <div class="doc-eyebrow">Legal document</div>
+    <h1 class="doc-h1">Privacy <strong>Policy</strong></h1>
+    <div class="doc-meta">Last updated: April 2026 &nbsp;·&nbsp; Łukasz Pekala &nbsp;·&nbsp; ai-engineer.app</div>
+  </div>
+
+  <div class="highlight">
+    This policy covers <strong>ai-engineer.app</strong> and its subdomains. It explains what personal data we collect, why, how long we keep it, and your rights under GDPR.
+  </div>
+
+  <!-- 01 -->
+  <div class="section">
+    <div class="sh"><span class="sh-num">01</span><span class="sh-title">Who we are</span><div class="sh-rule"></div></div>
+    <p>This website is operated by <strong>Łukasz Pekala</strong>, an individual developer based in Poland. For data protection purposes, Łukasz Pekala is the data controller.</p>
+    <p>Contact: <a href="mailto:luke@ai-engineer.app">luke@ai-engineer.app</a></p>
+  </div>
+
+  <!-- 02 -->
+  <div class="section">
+    <div class="sh"><span class="sh-num">02</span><span class="sh-title">What we collect</span><div class="sh-rule"></div></div>
+    <p>We collect only what is necessary to provide access to the portfolio tools:</p>
+    <table class="data-table">
+      <thead><tr><th>Data</th><th>Why</th><th>Legal basis</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Email address</td>
+          <td>To grant access to portfolio apps and send product update emails when new tools ship</td>
+          <td>Consent (GDPR Art. 6(1)(a))</td>
+        </tr>
+        <tr>
+          <td>App opens</td>
+          <td>Anonymous usage analytics — which tools are used, timestamp</td>
+          <td>Legitimate interest (GDPR Art. 6(1)(f))</td>
+        </tr>
+        <tr>
+          <td>Unlock status</td>
+          <td>Stored locally in your browser <code>localStorage</code> so you don't need to re-enter your email on return visits. Stays on your device only — never sent to our servers.</td>
+          <td>Legitimate interest</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>We do not use advertising cookies, tracking pixels, or third-party analytics (no Google Analytics, no Meta Pixel).</p>
+  </div>
+
+  <!-- 03 -->
+  <div class="section">
+    <div class="sh"><span class="sh-num">03</span><span class="sh-title">Third party processors</span><div class="sh-rule"></div></div>
+    <p>Your data is processed by the following third parties. All operate under Standard Contractual Clauses (SCCs) for GDPR-compliant transfers from the EU to the USA:</p>
+    <table class="data-table">
+      <thead><tr><th>Processor</th><th>Purpose</th><th>Location</th><th>Privacy policy</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Google Sheets<br><span style="font-size:10px;color:var(--t4)">Google LLC</span></td>
+          <td>Email address and app usage data storage</td>
+          <td>USA (EU SCCs apply)</td>
+          <td><a href="https://policies.google.com/privacy" target="_blank">policies.google.com</a></td>
+        </tr>
+        <tr>
+          <td>Resend<br><span style="font-size:10px;color:var(--t4)">Resend Inc.</span></td>
+          <td>Transactional email delivery (welcome email, product updates)</td>
+          <td>USA (EU SCCs apply)</td>
+          <td><a href="https://resend.com/privacy" target="_blank">resend.com/privacy</a></td>
+        </tr>
+        <tr>
+          <td>Vercel<br><span style="font-size:10px;color:var(--t4)">Vercel Inc.</span></td>
+          <td>Application hosting and serverless API functions</td>
+          <td>USA/EU (EU SCCs apply)</td>
+          <td><a href="https://vercel.com/legal/privacy-policy" target="_blank">vercel.com/legal</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <p>We do not sell, rent, or share your personal data with any other parties.</p>
+  </div>
+
+  <!-- 04 -->
+  <div class="section">
+    <div class="sh"><span class="sh-num">04</span><span class="sh-title">How long we keep your data</span><div class="sh-rule"></div></div>
+    <p><strong>Email address:</strong> retained until you unsubscribe or request deletion. We do not set an automatic expiry.</p>
+    <p><strong>App usage logs:</strong> retained for up to 12 months, then deleted.</p>
+    <p><strong>Browser localStorage:</strong> persists until you clear your browser data or request deletion.</p>
+  </div>
+
+  <!-- 05 -->
+  <div class="section">
+    <div class="sh"><span class="sh-num">05</span><span class="sh-title">Your rights</span><div class="sh-rule"></div></div>
+    <p>Under GDPR you have the following rights:</p>
+    <table class="data-table">
+      <thead><tr><th>Right</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td>Access</td><td>Request a copy of all personal data we hold about you</td></tr>
+        <tr><td>Rectification</td><td>Ask us to correct inaccurate data</td></tr>
+        <tr><td>Erasure</td><td>Request deletion of all your personal data ("right to be forgotten")</td></tr>
+        <tr><td>Restriction</td><td>Ask us to stop processing your data while a dispute is resolved</td></tr>
+        <tr><td>Portability</td><td>Receive your data in a machine-readable format</td></tr>
+        <tr><td>Objection</td><td>Object to processing based on legitimate interest</td></tr>
+        <tr><td>Withdraw consent</td><td>Unsubscribe at any time by replying to any email or contacting us directly</td></tr>
+      </tbody>
+    </table>
+    <p>To exercise any of these rights, contact us at the address below. We will respond within 30 days.</p>
+    <p>You also have the right to lodge a complaint with the Polish data protection authority: <a href="https://uodo.gov.pl" target="_blank">uodo.gov.pl</a></p>
+  </div>
+
+  <!-- 06 -->
+  <div class="section">
+    <div class="sh"><span class="sh-num">06</span><span class="sh-title">Local storage notice</span><div class="sh-rule"></div></div>
+    <p>This site uses <code>localStorage</code> — browser storage technology — to remember your unlock status between visits. This is not a cookie. It stores only:</p>
+    <table class="data-table">
+      <thead><tr><th>Key</th><th>Value</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>pf_unlocked</code></td><td><code>1</code></td><td>Whether you have submitted your email to unlock apps</td></tr>
+        <tr><td><code>pf_email</code></td><td>Your email</td><td>Displayed in the account status indicator</td></tr>
+        <tr><td><code>pf_visited</code></td><td><code>1</code></td><td>Whether to skip the intro splash on return visits</td></tr>
+        <tr><td><code>pf_theme</code></td><td><code>dark</code> or <code>light</code></td><td>Your preferred colour theme</td></tr>
+      </tbody>
+    </table>
+    <p>To clear this data, open your browser's developer tools (F12), go to Application → Local Storage → ai-engineer.app, and delete the entries. Or contact us and we will provide instructions.</p>
+  </div>
+
+  <!-- 07 -->
+  <div class="section">
+    <div class="sh"><span class="sh-num">07</span><span class="sh-title">Changes to this policy</span><div class="sh-rule"></div></div>
+    <p>We may update this policy when we add new features or processors. The "last updated" date at the top of this page will reflect any changes. For significant changes we will notify existing subscribers by email.</p>
+  </div>
+
+  <!-- 08 -->
+  <div class="section">
+    <div class="sh"><span class="sh-num">08</span><span class="sh-title">Contact</span><div class="sh-rule"></div></div>
+    <div class="contact-box">
+      <p>For any privacy-related requests, questions, or complaints:</p>
+      <a href="mailto:luke@ai-engineer.app" class="contact-email">luke@ai-engineer.app</a>
+    </div>
+  </div>
+
+  <footer>
+    <span class="foot-l">ai-engineer.app · privacy policy · april 2026</span>
+    <span class="foot-r"><a href="/">← back to portfolio</a></span>
+  </footer>
+
+</div>
+</body>
+</html>
