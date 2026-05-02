@@ -225,6 +225,13 @@ body{font-family:var(--mono);display:flex;align-items:center;justify-content:cen
 
 /* Right pane */
 .rpane{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg3);}
+
+/* Expand mode */
+.sidebar{transition:width .2s ease,min-width .2s ease;}
+.lpane{transition:width .2s ease,min-width .2s ease;}
+.layout.expanded .sidebar{width:0!important;min-width:0!important;overflow:hidden;border:none;}
+.layout.expanded .lpane{width:0!important;min-width:0!important;overflow:hidden;border:none;}
+.layout.expanded .actbar{width:0!important;min-width:0!important;overflow:hidden;border:none;}
 .viewer{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
 
 /* Welcome state */
@@ -563,6 +570,9 @@ body{font-family:var(--mono);display:flex;align-items:center;justify-content:cen
           <div class="ph">
             <span class="ph-title" id="vt">preview</span>
             <button class="phbtn" id="ext-btn" style="display:none" onclick="openExternal()">↗ open</button>
+            <button class="phbtn" id="expand-btn" title="Expand preview" onclick="toggleExpand()" style="margin-left:4px;">
+              <svg id="expand-icon" width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M8 3v10"/><path d="M1 1h5M1 1v5M15 1h-5M15 1v5M1 15h5M1 15v-5M15 15h-5M15 15v-5"/></svg>
+            </button>
           </div>
           <div class="viewer" id="viewer">
             <div class="welcome">
@@ -1309,6 +1319,30 @@ window.loadViewer=function(app){
   track(app.id);
   _origLoadViewer(app);
 };
+
+// ─────────────────────────────────────────────────────
+// EXPAND / COLLAPSE PREVIEW
+// ─────────────────────────────────────────────────────
+let isExpanded = false;
+
+function toggleExpand(){
+  isExpanded = !isExpanded;
+  const layout = document.querySelector('.layout');
+  const icon = document.getElementById('expand-icon');
+  const btn = document.getElementById('expand-btn');
+
+  if(isExpanded){
+    layout.classList.add('expanded');
+    btn.title = 'Collapse preview';
+    // Collapse icon (X / minimize)
+    icon.innerHTML = '<path d="M3 3l10 10M13 3L3 13"/><path d="M1 6H6V1M10 1v5h5M1 10h5v5M10 15v-5h5"/>';
+  } else {
+    layout.classList.remove('expanded');
+    btn.title = 'Expand preview';
+    // Expand icon (arrows pointing out)
+    icon.innerHTML = '<path d="M3 8h10M8 3v10"/><path d="M1 1h5M1 1v5M15 1h-5M15 1v5M1 15h5M1 15v-5M15 15h-5M15 15v-5"/>';
+  }
+}
 
 // ─────────────────────────────────────────────────────
 // ACTIVITY BAR
