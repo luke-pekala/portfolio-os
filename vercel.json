@@ -7,6 +7,16 @@
     { "src": "api/admin-data.js", "use": "@vercel/node" },
     { "src": "api/deploy-notify.js", "use": "@vercel/node" }
   ],
+  "headers": [
+    {
+      "source": "/sitemap.xml",
+      "headers": [{ "key": "Content-Type", "value": "application/xml; charset=utf-8" }]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [{ "key": "Content-Type", "value": "text/plain; charset=utf-8" }]
+    }
+  ],
   "routes": [
     { "src": "/api/gate", "dest": "/api/gate.js" },
     { "src": "/api/track", "dest": "/api/track.js" },
